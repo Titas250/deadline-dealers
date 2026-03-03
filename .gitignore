@@ -184,6 +184,11 @@ __marimo__/
 # Streamlit
 .streamlit/secrets.toml
 
+# Godot
+.godot/
+mono/
+data_*/
+export_presets.cfg
 
 # -------------------------
 # C# / .NET / VISUAL STUDIO

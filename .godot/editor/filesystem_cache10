@@ -1,0 +1,17 @@
+63f7b34db8d8cdea90c76aacccf841ec
+::res://::1772536490
+icon.svg::CompressedTexture2D::2640024836966822902::1772534214::1772534214::1::::<><><>0<>0<>e4dc3eccf5eb90b1b00ad537b8b8c352<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
+::res://Assets/::1772534784
+::res://Assets/Images/::1772535099
+::res://Assets/Images/MainMenu/::1772535174
+blekasjekas.png::CompressedTexture2D::5381986149704518263::1772534216::1772535174::1::::<><><>0<>0<>d2e5d40794778004dd712078ba71a7f1<>res://.godot/imported/blekasjekas.png-9a09855c2307761d2f620033676a2b3f.ctex::
+gear-removebg-preview.png::CompressedTexture2D::1643408263242056669::1772534216::1772535174::1::::<><><>0<>0<>3b747e26812e5918b3bd339ecd0f92c3<>res://.godot/imported/gear-removebg-preview.png-d20100cfe238734cd0b0bdeb226de5e3.ctex::
+pickurpoison-removebg-preview.png::CompressedTexture2D::3379456832976723340::1772534216::1772535174::1::::<><><>0<>0<>cba71ed158820511e0445f23b2d07053<>res://.godot/imported/pickurpoison-removebg-preview.png-bbbb84b44e993a6d25e60ab09d2d7da7.ctex::
+roullete.png::CompressedTexture2D::4416748193287077655::1772534216::1772535174::1::::<><><>0<>0<>639e23577b1383228ace1a826677928f<>res://.godot/imported/roullete.png-dc131968220d912f288bf3d1100534f7.ctex::
+::res://Assets/Sounds/::1772534781
+::res://Scenes/::1772535037
+::res://Scenes/MainMenu/::1772536306
+MainMenu.tscn::PackedScene::3047390264282626724::1772535978::0::1::::<><><>0<>0<><>::uid://gdwxjmljaoyw::::res://Scripts/MainMenu/MainMenu.gd<>uid://bofbfpkhbw4hk::::res://Assets/Images/MainMenu/pickurpoison-removebg-preview.png<>uid://b36rgyirqdo6j::::res://Assets/Images/MainMenu/roullete.png<>uid://xocxuiuxgjxl::::res://Assets/Images/MainMenu/gear-removebg-preview.png
+::res://Scripts/::1772535064
+::res://Scripts/MainMenu/::1772536395
+MainMenu.gd::GDScript::428703533950686446::1772536395::0::1::::<>Control<><>0<>0<><>::

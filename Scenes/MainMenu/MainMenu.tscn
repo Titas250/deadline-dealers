@@ -1,0 +1,101 @@
+[gd_scene format=3 uid="uid://bjogcpysb68cu"]
+
+[ext_resource type="Script" uid="uid://gdwxjmljaoyw" path="res://Scripts/MainMenu/MainMenu.gd" id="1_1vovh"]
+[ext_resource type="Texture2D" uid="uid://bofbfpkhbw4hk" path="res://Assets/Images/MainMenu/pickurpoison-removebg-preview.png" id="2_6k1ba"]
+[ext_resource type="Texture2D" uid="uid://b36rgyirqdo6j" path="res://Assets/Images/MainMenu/roullete.png" id="3_6k1ba"]
+[ext_resource type="Texture2D" uid="uid://xocxuiuxgjxl" path="res://Assets/Images/MainMenu/gear-removebg-preview.png" id="4_21vr6"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_kpx3y"]
+load_path = "res://.godot/imported/blekasjekas.png-9a09855c2307761d2f620033676a2b3f.ctex"
+
+[sub_resource type="Theme" id="Theme_h7a2f"]
+
+[node name="MainMenu" type="Control" unique_id=1183043380]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1vovh")
+
+[node name="Background" type="ColorRect" parent="." unique_id=496091969]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.08, 0.08, 0.12, 1)
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=2081978105]
+position = Vector2(572.125, 229.4375)
+scale = Vector2(0.7504046, 0.5983251)
+texture = ExtResource("2_6k1ba")
+
+[node name="Title" type="Label" parent="." unique_id=2081758103]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.15
+anchor_right = 0.5
+anchor_bottom = 0.15
+offset_left = -300.0
+offset_top = -40.0
+offset_right = 300.0
+offset_bottom = 40.0
+theme_override_font_sizes/font_size = 52
+text = "DEADLINE DEALERS"
+horizontal_alignment = 1
+
+[node name="GameButtonsContainer" type="HBoxContainer" parent="." unique_id=1595581794]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -310.0
+offset_top = -60.0
+offset_right = 310.0
+offset_bottom = 60.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 40
+alignment = 1
+
+[node name="Black Jack" type="Button" parent="GameButtonsContainer" unique_id=1999961959]
+custom_minimum_size = Vector2(260, 100)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+icon = SubResource("CompressedTexture2D_kpx3y")
+flat = true
+expand_icon = true
+
+[node name="Roullete" type="Button" parent="GameButtonsContainer" unique_id=220134661]
+custom_minimum_size = Vector2(260, 100)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+icon = ExtResource("3_6k1ba")
+flat = true
+expand_icon = true
+
+[node name="SettingsButton" type="Button" parent="." unique_id=542079336]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -114.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 113.0
+grow_horizontal = 0
+theme = SubResource("Theme_h7a2f")
+theme_override_font_sizes/font_size = 16
+icon = ExtResource("4_21vr6")
+flat = true
+expand_icon = true
+
+[connection signal="pressed" from="GameButtonsContainer/Black Jack" to="." method="_on_game_one_pressed"]
+[connection signal="pressed" from="GameButtonsContainer/Roullete" to="." method="_on_game_two_pressed"]
+[connection signal="pressed" from="SettingsButton" to="." method="_on_settings_pressed"]

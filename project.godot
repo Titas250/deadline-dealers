@@ -11,10 +11,14 @@ config_version=5
 [application]
 
 config/name="Deadline Dealers"
-run/main_scene="uid://bjogcpysb68cu"
+run/main_scene="uid://dnfmsqi4m7jv5"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
 config/run/main_scene="res://MainMenu.tscn"
+
+[autoload]
+
+BalanceManager="*res://Scripts/BalanceManager.gd"
 
 [dotnet]
 
@@ -27,7 +31,3 @@ project/assembly_name="Deadline Dealers"
 [rendering]
 
 rendering_device/driver.windows="d3d12"
-
-[autoload]
-
-BalanceManager="*res://Scripts/BalanceManager.gd"

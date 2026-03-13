@@ -17,6 +17,7 @@ func _ready() -> void:
 	
 	# SCRUM-141: Build deck on ready
 	build_deck()
+	shuffle_deck()
 
 ## SCRUM-111: Set BalanceLabel.text = 'Balance: ' + str(BalanceManager.get_balance())
 ## SCRUM-112: Create update_balance_display() helper
@@ -45,3 +46,7 @@ func build_deck() -> void:
 	# SCRUM-142: Print confirmation
 	print("Deck built: ", deck.size(), " cards")
 	print("Deck contents: ", deck)
+func shuffle_deck() -> void:
+	deck.shuffle()
+	print("Deck shuffled. First 5 cards: ", deck.slice(0, 5))
+	

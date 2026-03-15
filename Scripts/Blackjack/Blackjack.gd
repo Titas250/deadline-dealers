@@ -2,6 +2,12 @@ extends Control
 
 # === SCRUM-138: Card deck ===
 var deck: Array = []
+# === SCRUM-147: Player hand ===
+var player_hand: Array = []
+# === SCRUM-152: Dealer hand ===
+var dealer_hand: Array = []
+var dealer_card_hidden: bool = true  # SCRUM-155: Second card is hidden
+
 
 @onready var balance_label: Label = $BalanceLabel
 @onready var back_button: Button = $BackButton
@@ -18,6 +24,46 @@ func _ready() -> void:
 	# SCRUM-141: Build deck on ready
 	build_deck()
 	shuffle_deck()
+	
+
+# === SCRUM-147: Deal cards ===
+## SCRUM-148: Deal one card from deck (pop last element)
+func deal_card() -> int:
+	# If deck is empty, rebuild and shuffle
+	if deck.is_empty():
+		print("Deck empty! Rebuilding...")
+		build_deck()
+		shuffle_deck()
+	return deck.pop_back()
+
+## SCRUM-150: Deal 2 initial cards to player
+func deal_initial_player_cards() -> void:
+	player_hand.clear()  # Clear any existing cards
+	player_hand.append(deal_card())
+	player_hand.append(deal_card())
+	# SCRUM-151: Print verification
+	print("Player hand: ", player_hand)
+
+## SCRUM-154: Deal 2 initial cards to dealer
+func deal_initial_dealer_cards() -> void:
+	dealer_hand.clear()
+	dealer_hand.append(deal_card())
+	dealer_hand.append(deal_card())  # SCRUM-155: This card stays hidden
+	dealer_card_hidden = true
+# SCRUM-156: Print verification
+	print("Dealer hand: ", dealer_hand, " (second card hidden)")
+
+## Start a new round of Blackjack
+## Combines all dealing functions
+func start_round() -> void:
+	# SCRUM-146: Shuffle at each round start
+	shuffle_deck()
+	
+	# Deal cards to both players
+	deal_initial_player_cards()
+	deal_initial_dealer_cards()
+	
+	print("=== NEW ROUND STARTED ===")
 
 ## SCRUM-111: Set BalanceLabel.text = 'Balance: ' + str(BalanceManager.get_balance())
 ## SCRUM-112: Create update_balance_display() helper

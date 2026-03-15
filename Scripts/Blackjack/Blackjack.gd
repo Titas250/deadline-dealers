@@ -11,6 +11,7 @@ var dealer_card_hidden: bool = true  # SCRUM-155: Second card is hidden
 
 @onready var balance_label: Label = $BalanceLabel
 @onready var back_button: Button = $BackButton
+@onready var player_score_label: Label = $PlayerScoreLabel
 
 ## Blackjack game scene script
 ## SCRUM-133: Create Blackjack scene
@@ -43,6 +44,7 @@ func deal_initial_player_cards() -> void:
 	player_hand.append(deal_card())
 	# SCRUM-151: Print verification
 	print("Player hand: ", player_hand)
+	update_player_score()
 
 ## SCRUM-154: Deal 2 initial cards to dealer
 func deal_initial_dealer_cards() -> void:
@@ -96,3 +98,26 @@ func shuffle_deck() -> void:
 	deck.shuffle()
 	print("Deck shuffled. First 5 cards: ", deck.slice(0, 5))
 	
+func calculate_score(hand: Array) -> int:
+	var score: int = 0
+	var aces: int = 0
+	
+	for card in hand:
+		if card == 1:  # Ace
+			aces += 1
+			score += 11  # Start with Ace = 11
+		elif card >= 11:  # Face cards (Jack, Queen, King)
+			score += 10
+		else:  # Number cards 2-10
+			score += card
+	
+	# Reduce Ace value from 11 to 1 if busting
+	while score > 21 and aces > 0:
+		score -= 10  # Change Ace from 11 to 1
+		aces -= 1
+	
+	return score
+func update_player_score() -> void:
+	var score = calculate_score(player_hand)
+	if player_score_label:
+		player_score_label.text = "Your Score: " + str(score)

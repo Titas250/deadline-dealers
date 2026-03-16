@@ -91,6 +91,16 @@ horizontal_alignment = 1
 visible = false
 text = ""
 
+[node name="PlayerScoreLabel" type="Label" parent="." unique_id=1000000004]
+layout_mode = 1
+offset_left = 400.0
+offset_top = 400.0
+offset_right = 650.0
+offset_bottom = 440.0
+theme_override_font_sizes/font_size = 28
+text = "Your Score: 0"
+horizontal_alignment = 1
+
 [connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="HitButton" to="." method="_on_hit_button_pressed"]
 [connection signal="pressed" from="StandButton" to="." method="_on_stand_button_pressed"]

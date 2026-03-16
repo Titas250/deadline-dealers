@@ -1,14 +1,8 @@
 [gd_scene format=3 uid="uid://c8xk2m5qwn1bj"]
-<<<<<<< HEAD
-[ext_resource type="Script" uid="uid://dbsob3bgmurj0" path="res://Scripts/Blackjack/Blackjack.gd" id="1_blackjack"]
-
-[node name="Blackjack" type="Control" unique_id=1535185894]
-=======
 
 [ext_resource type="Script" uid="uid://dbsob3bgmurj0" path="res://Scripts/Blackjack/Blackjack.gd" id="1_blackjack"]
 
-[node name="Blackjack" type="Control" unique_id=458325490]
->>>>>>> origin/main
+[node name="Blackjack" type="Control"]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -17,11 +11,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_blackjack")
 
-<<<<<<< HEAD
-[node name="Background" type="ColorRect" parent="." unique_id=1573470417]
-=======
-[node name="Background" type="ColorRect" parent="." unique_id=1600877759]
->>>>>>> origin/main
+[node name="Background" type="ColorRect" parent="."]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -30,11 +20,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.1, 0.3, 0.1, 1)
 
-<<<<<<< HEAD
-[node name="Title" type="Label" parent="." unique_id=1189381742]
-=======
-[node name="Title" type="Label" parent="." unique_id=920621423]
->>>>>>> origin/main
+[node name="Title" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -48,11 +34,7 @@ theme_override_font_sizes/font_size = 36
 text = "BLACKJACK"
 horizontal_alignment = 1
 
-<<<<<<< HEAD
-[node name="BalanceLabel" type="Label" parent="." unique_id=393388519]
-=======
-[node name="BalanceLabel" type="Label" parent="." unique_id=1262345116]
->>>>>>> origin/main
+[node name="BalanceLabel" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -66,11 +48,7 @@ theme_override_font_sizes/font_size = 20
 text = "Balance: $1000"
 horizontal_alignment = 2
 
-<<<<<<< HEAD
-[node name="BackButton" type="Button" parent="." unique_id=1933543857]
-=======
-[node name="BackButton" type="Button" parent="." unique_id=2131922662]
->>>>>>> origin/main
+[node name="BackButton" type="Button" parent="."]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -83,58 +61,130 @@ grow_vertical = 0
 theme_override_font_sizes/font_size = 18
 text = "← Back to Menu"
 
-<<<<<<< HEAD
-[node name="HitButton" type="Button" parent="." unique_id=1000000001]
+[node name="DealerScoreLabel" type="Label" parent="."]
 layout_mode = 1
-offset_left = 400.0
-offset_top = 550.0
-offset_right = 520.0
-offset_bottom = 600.0
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -125.0
+offset_top = 120.0
+offset_right = 125.0
+offset_bottom = 160.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 28
+text = "Dealer: ?"
+horizontal_alignment = 1
+
+[node name="PlayerScoreLabel" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -125.0
+offset_top = 420.0
+offset_right = 125.0
+offset_bottom = 460.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 28
+text = "Your Score: 0"
+horizontal_alignment = 1
+
+[node name="HitButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -140.0
+offset_top = 520.0
+offset_right = -20.0
+offset_bottom = 570.0
+grow_horizontal = 2
 theme_override_font_sizes/font_size = 20
 text = "HIT"
 disabled = true
 
-[node name="StandButton" type="Button" parent="." unique_id=1000000002]
+[node name="StandButton" type="Button" parent="."]
 layout_mode = 1
-offset_left = 550.0
-offset_top = 550.0
-offset_right = 670.0
-offset_bottom = 600.0
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 20.0
+offset_top = 520.0
+offset_right = 140.0
+offset_bottom = 570.0
+grow_horizontal = 2
 theme_override_font_sizes/font_size = 20
 text = "STAND"
 disabled = true
 
-[node name="ResultLabel" type="Label" parent="." unique_id=1000000003]
+[node name="ResultLabel" type="Label" parent="."]
 layout_mode = 1
-offset_left = 350.0
-offset_top = 300.0
-offset_right = 550.0
-offset_bottom = 350.0
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150.0
+offset_top = 280.0
+offset_right = 150.0
+offset_bottom = 330.0
+grow_horizontal = 2
 theme_override_font_sizes/font_size = 36
+text = ""
 horizontal_alignment = 1
 visible = false
-text = ""
 
-[node name="PlayerScoreLabel" type="Label" parent="." unique_id=1000000004]
+[node name="BetLabel" type="Label" parent="."]
 layout_mode = 1
-offset_left = 400.0
-offset_top = 400.0
-offset_right = 650.0
-offset_bottom = 440.0
-theme_override_font_sizes/font_size = 28
-text = "Your Score: 0"
-horizontal_alignment = 1
-=======
-[node name="PlayerScoreLabel" type="Label" parent="." unique_id=997994627]
-layout_mode = 0
-offset_left = 500.0
-offset_top = 400.0
-offset_right = 597.0
-offset_bottom = 423.0
-theme_override_font_sizes/font_size = 28
-text = "Your Score 0"
->>>>>>> origin/main
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -180.0
+offset_top = -110.0
+offset_right = -60.0
+offset_bottom = -80.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 18
+text = "Your Bet:"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="BetSpinBox" type="SpinBox" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -50.0
+offset_top = -110.0
+offset_right = 70.0
+offset_bottom = -80.0
+grow_horizontal = 2
+grow_vertical = 0
+min_value = 10.0
+max_value = 1000.0
+step = 10.0
+value = 10.0
+
+[node name="PlaceBetButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = 80.0
+offset_top = -110.0
+offset_right = 200.0
+offset_bottom = -80.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_font_sizes/font_size = 16
+text = "PLACE BET"
 
 [connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="HitButton" to="." method="_on_hit_button_pressed"]
 [connection signal="pressed" from="StandButton" to="." method="_on_stand_button_pressed"]
+[connection signal="pressed" from="PlaceBetButton" to="." method="_on_place_bet_button_pressed"]

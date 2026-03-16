@@ -1,8 +1,8 @@
-[gd_scene load_steps=2 format=3 uid="uid://bwk3n7qp2xr4m"]
+[gd_scene format=3 uid="uid://bwk3n7qp2xr4m"]
 
-[ext_resource type="Script" path="res://Scripts/Roulette/Roulette.gd" id="1_roulette"]
+[ext_resource type="Script" uid="uid://cxh0lsmf08iqs" path="res://Scripts/Roulette/Roulette.gd" id="1_roulette"]
 
-[node name="Roulette" type="Control"]
+[node name="Roulette" type="Control" unique_id=2068969859]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -11,7 +11,7 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_roulette")
 
-[node name="Background" type="ColorRect" parent="."]
+[node name="Background" type="ColorRect" parent="." unique_id=715523178]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -20,7 +20,7 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.4, 0.1, 0.1, 1)
 
-[node name="Title" type="Label" parent="."]
+[node name="Title" type="Label" parent="." unique_id=1124939931]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -34,7 +34,7 @@ theme_override_font_sizes/font_size = 36
 text = "ROULETTE"
 horizontal_alignment = 1
 
-[node name="BalanceLabel" type="Label" parent="."]
+[node name="BalanceLabel" type="Label" parent="." unique_id=55877913]
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -48,7 +48,7 @@ theme_override_font_sizes/font_size = 20
 text = "Balance: $1000"
 horizontal_alignment = 2
 
-[node name="BackButton" type="Button" parent="."]
+[node name="BackButton" type="Button" parent="." unique_id=878282655]
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0

@@ -1,7 +1,14 @@
 [gd_scene format=3 uid="uid://c8xk2m5qwn1bj"]
+<<<<<<< HEAD
 [ext_resource type="Script" uid="uid://dbsob3bgmurj0" path="res://Scripts/Blackjack/Blackjack.gd" id="1_blackjack"]
 
 [node name="Blackjack" type="Control" unique_id=1535185894]
+=======
+
+[ext_resource type="Script" uid="uid://dbsob3bgmurj0" path="res://Scripts/Blackjack/Blackjack.gd" id="1_blackjack"]
+
+[node name="Blackjack" type="Control" unique_id=458325490]
+>>>>>>> origin/main
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -10,7 +17,11 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_blackjack")
 
+<<<<<<< HEAD
 [node name="Background" type="ColorRect" parent="." unique_id=1573470417]
+=======
+[node name="Background" type="ColorRect" parent="." unique_id=1600877759]
+>>>>>>> origin/main
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -19,7 +30,11 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.1, 0.3, 0.1, 1)
 
+<<<<<<< HEAD
 [node name="Title" type="Label" parent="." unique_id=1189381742]
+=======
+[node name="Title" type="Label" parent="." unique_id=920621423]
+>>>>>>> origin/main
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
@@ -33,7 +48,11 @@ theme_override_font_sizes/font_size = 36
 text = "BLACKJACK"
 horizontal_alignment = 1
 
+<<<<<<< HEAD
 [node name="BalanceLabel" type="Label" parent="." unique_id=393388519]
+=======
+[node name="BalanceLabel" type="Label" parent="." unique_id=1262345116]
+>>>>>>> origin/main
 layout_mode = 1
 anchors_preset = 1
 anchor_left = 1.0
@@ -47,7 +66,11 @@ theme_override_font_sizes/font_size = 20
 text = "Balance: $1000"
 horizontal_alignment = 2
 
+<<<<<<< HEAD
 [node name="BackButton" type="Button" parent="." unique_id=1933543857]
+=======
+[node name="BackButton" type="Button" parent="." unique_id=2131922662]
+>>>>>>> origin/main
 layout_mode = 1
 anchors_preset = 2
 anchor_top = 1.0
@@ -60,6 +83,7 @@ grow_vertical = 0
 theme_override_font_sizes/font_size = 18
 text = "← Back to Menu"
 
+<<<<<<< HEAD
 [node name="HitButton" type="Button" parent="." unique_id=1000000001]
 layout_mode = 1
 offset_left = 400.0
@@ -100,6 +124,16 @@ offset_bottom = 440.0
 theme_override_font_sizes/font_size = 28
 text = "Your Score: 0"
 horizontal_alignment = 1
+=======
+[node name="PlayerScoreLabel" type="Label" parent="." unique_id=997994627]
+layout_mode = 0
+offset_left = 500.0
+offset_top = 400.0
+offset_right = 597.0
+offset_bottom = 423.0
+theme_override_font_sizes/font_size = 28
+text = "Your Score 0"
+>>>>>>> origin/main
 
 [connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="HitButton" to="." method="_on_hit_button_pressed"]

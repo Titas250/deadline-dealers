@@ -2,17 +2,28 @@ extends Control
 
 # === SCRUM-138: Card deck ===
 var deck: Array = []
+<<<<<<< HEAD
+=======
+# === SCRUM-147: Player hand ===
+>>>>>>> origin/main
 var player_hand: Array = []
 # === SCRUM-152: Dealer hand ===
 var dealer_hand: Array = []
 var dealer_card_hidden: bool = true  # SCRUM-155: Second card is hidden
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/main
 
 @onready var balance_label: Label = $BalanceLabel
 @onready var back_button: Button = $BackButton
 @onready var player_score_label: Label = $PlayerScoreLabel
+<<<<<<< HEAD
 @onready var hit_button: Button = $HitButton
 @onready var stand_button: Button = $StandButton
 @onready var result_label: Label = $ResultLabel
+=======
+>>>>>>> origin/main
 
 ## Blackjack game scene script
 ## SCRUM-133: Create Blackjack scene
@@ -24,7 +35,52 @@ func _ready() -> void:
 
 	# SCRUM-141: Build deck on ready
 	build_deck()
+<<<<<<< HEAD
 	start_round()
+=======
+	shuffle_deck()
+	
+
+# === SCRUM-147: Deal cards ===
+## SCRUM-148: Deal one card from deck (pop last element)
+func deal_card() -> int:
+	# If deck is empty, rebuild and shuffle
+	if deck.is_empty():
+		print("Deck empty! Rebuilding...")
+		build_deck()
+		shuffle_deck()
+	return deck.pop_back()
+
+## SCRUM-150: Deal 2 initial cards to player
+func deal_initial_player_cards() -> void:
+	player_hand.clear()  # Clear any existing cards
+	player_hand.append(deal_card())
+	player_hand.append(deal_card())
+	# SCRUM-151: Print verification
+	print("Player hand: ", player_hand)
+	update_player_score()
+
+## SCRUM-154: Deal 2 initial cards to dealer
+func deal_initial_dealer_cards() -> void:
+	dealer_hand.clear()
+	dealer_hand.append(deal_card())
+	dealer_hand.append(deal_card())  # SCRUM-155: This card stays hidden
+	dealer_card_hidden = true
+# SCRUM-156: Print verification
+	print("Dealer hand: ", dealer_hand, " (second card hidden)")
+
+## Start a new round of Blackjack
+## Combines all dealing functions
+func start_round() -> void:
+	# SCRUM-146: Shuffle at each round start
+	shuffle_deck()
+	
+	# Deal cards to both players
+	deal_initial_player_cards()
+	deal_initial_dealer_cards()
+	
+	print("=== NEW ROUND STARTED ===")
+>>>>>>> origin/main
 
 ## SCRUM-111: Set BalanceLabel.text = 'Balance: ' + str(BalanceManager.get_balance())
 ## SCRUM-112: Create update_balance_display() helper
@@ -50,6 +106,7 @@ func build_deck() -> void:
 			deck.append(value)
 	print("Deck built: ", deck.size(), " cards")
 	print("Deck contents: ", deck)
+<<<<<<< HEAD
 
 # === SCRUM-162: Hit button ===
 
@@ -73,10 +130,25 @@ func calculate_score(hand: Array) -> int:
 		if card == 1:  # Ace
 			aces += 1
 			score += 11
+=======
+func shuffle_deck() -> void:
+	deck.shuffle()
+	print("Deck shuffled. First 5 cards: ", deck.slice(0, 5))
+	
+func calculate_score(hand: Array) -> int:
+	var score: int = 0
+	var aces: int = 0
+	
+	for card in hand:
+		if card == 1:  # Ace
+			aces += 1
+			score += 11  # Start with Ace = 11
+>>>>>>> origin/main
 		elif card >= 11:  # Face cards (Jack, Queen, King)
 			score += 10
 		else:  # Number cards 2-10
 			score += card
+<<<<<<< HEAD
 	# Reduce Ace value from 11 to 1 if busting
 	while score > 21 and aces > 0:
 		score -= 10
@@ -84,10 +156,20 @@ func calculate_score(hand: Array) -> int:
 	return score
 
 ## SCRUM-160: Update player score label on screen
+=======
+	
+	# Reduce Ace value from 11 to 1 if busting
+	while score > 21 and aces > 0:
+		score -= 10  # Change Ace from 11 to 1
+		aces -= 1
+	
+	return score
+>>>>>>> origin/main
 func update_player_score() -> void:
 	var score = calculate_score(player_hand)
 	if player_score_label:
 		player_score_label.text = "Your Score: " + str(score)
+<<<<<<< HEAD
 
 ## SCRUM-147: Shuffle deck using Fisher-Yates algorithm
 func shuffle_deck() -> void:
@@ -158,3 +240,5 @@ func _on_hit_button_pressed() -> void:
 ## Connected to StandButton.pressed signal (SCRUM-167)
 func _on_stand_button_pressed() -> void:
 	pass
+=======
+>>>>>>> origin/main

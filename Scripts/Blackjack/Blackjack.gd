@@ -20,15 +20,14 @@ var current_bet: int = 0
 @onready var result_label: Label = $ResultLabel
 @onready var bet_spinbox: SpinBox = $BetSpinBox  # SCRUM-113
 @onready var place_bet_button: Button = $PlaceBetButton  # SCRUM-113
+@onready var bet_error_label: Label = $BetErrorLabel  # SCRUM-118: Klaidos žinutė
 
 ## Blackjack game scene script
-## SCRUM-133: Create Blackjack scene
-## SCRUM-108: Show balance on screen
 func _ready() -> void:
 	update_balance_display()
 	if BalanceManager:
 		BalanceManager.balance_changed.connect(_on_balance_changed)
-	# SCRUM-141: Build deck on ready
+	
 	build_deck()
 	shuffle_deck()
 	
@@ -39,9 +38,45 @@ func _ready() -> void:
 		stand_button.disabled = true
 	if result_label:
 		result_label.visible = false
+	
+	# SCRUM-118: Set SpinBox min and max to current balance
+	if bet_spinbox and BalanceManager:
+		bet_spinbox.min_value = 9
+		bet_spinbox.max_value = BalanceManager.get_balance()
+		bet_spinbox.value = 10
+		# Gauti LineEdit iš SpinBox ir prijungti signalą
+		var line_edit = bet_spinbox.get_line_edit()
+		if line_edit:
+			line_edit.text_changed.connect(_on_bet_text_changed)
+		print("DEBUG _ready: SpinBox min=", bet_spinbox.min_value, " max=", bet_spinbox.max_value)
 
-## SCRUM-111: Set BalanceLabel.text = 'Balance: ' + str(BalanceManager.get_balance())
-## SCRUM-112: Create update_balance_display() helper
+func _on_bet_text_changed(new_text: String) -> void:
+	if new_text.is_empty():
+		return
+	var value = int(new_text)
+	var balance = BalanceManager.get_balance()
+	if value > balance:
+		show_bet_error("Per didelė suma! Max: $" + str(balance))
+		if place_bet_button:
+			place_bet_button.disabled = true
+	elif value < 10:
+		show_bet_error("Per maža suma! Min: $10")
+		if place_bet_button:
+			place_bet_button.disabled = true
+	else:
+		hide_bet_error()
+		if place_bet_button:
+			place_bet_button.disabled = false
+
+func show_bet_error(message: String) -> void:
+	if bet_error_label:
+		bet_error_label.text = message
+		bet_error_label.visible = true
+
+func hide_bet_error() -> void:
+	if bet_error_label:
+		bet_error_label.visible = false
+
 func update_balance_display() -> void:
 	if balance_label and BalanceManager:
 		balance_label.text = "Balance: $" + str(BalanceManager.get_balance())
@@ -49,14 +84,16 @@ func update_balance_display() -> void:
 func _on_balance_changed(new_balance: int) -> void:
 	if balance_label:
 		balance_label.text = "Balance: $" + str(new_balance)
+	# SCRUM-118: Update SpinBox max when balance changes
+	if bet_spinbox:
+		bet_spinbox.max_value = new_balance
+		if bet_spinbox.value > new_balance:
+			bet_spinbox.value = new_balance
 
-## SCRUM-135: Back to Menu button
 func _on_back_button_pressed() -> void:
 	get_tree().change_scene_to_file("res://Scenes/MainMenu/MainMenu.tscn")
 
 # === SCRUM-138: Card deck ===
-## SCRUM-139: deck array declared above
-## SCRUM-140: Build deck with 52 cards (4 suits x 13 values)
 func build_deck() -> void:
 	deck.clear()
 	for _suit in range(4):
@@ -64,12 +101,10 @@ func build_deck() -> void:
 			deck.append(value)
 	print("Deck built: ", deck.size(), " cards")
 
-# === SCRUM-143: Shuffle deck ===
 func shuffle_deck() -> void:
 	deck.shuffle()
 	print("Deck shuffled. First 5 cards: ", deck.slice(0, 5))
 
-# === SCRUM-148: Deal one card ===
 func deal_card() -> int:
 	if deck.is_empty():
 		print("Deck empty! Rebuilding...")
@@ -78,10 +113,6 @@ func deal_card() -> int:
 	return deck.pop_back()
 
 # === SCRUM-157: Score calculation ===
-## SCRUM-158: Calculate hand score with proper Blackjack rules
-## - Cards 2-10 = face value
-## - Face cards (J=11, Q=12, K=13) = 10 points
-## - Ace (1) = 11 points, reduces to 1 if busting
 func calculate_score(hand: Array) -> int:
 	var score: int = 0
 	var aces: int = 0
@@ -99,17 +130,14 @@ func calculate_score(hand: Array) -> int:
 		aces -= 1
 	return score
 
-## SCRUM-160: Update player score label on screen
 func update_player_score() -> void:
 	var score = calculate_score(player_hand)
 	if player_score_label:
 		player_score_label.text = "Your Score: " + str(score)
 
-## SCRUM-172: Update dealer score label on screen
 func update_dealer_score() -> void:
 	if dealer_score_label:
 		if dealer_card_hidden:
-			# Show only first card value + "?"
 			var first_card = dealer_hand[0]
 			var visible_score: int
 			if first_card == 1:
@@ -122,45 +150,70 @@ func update_dealer_score() -> void:
 		else:
 			dealer_score_label.text = "Dealer: " + str(calculate_score(dealer_hand))
 
-## SCRUM-150: Deal 2 initial cards to player
 func deal_initial_player_cards() -> void:
 	player_hand.clear()
 	player_hand.append(deal_card())
 	player_hand.append(deal_card())
 	print("Player hand: ", player_hand)
-	update_player_score()  # SCRUM-161: Update score after dealing
+	update_player_score()
 
-## SCRUM-154: Deal 2 initial cards to dealer
 func deal_initial_dealer_cards() -> void:
 	dealer_hand.clear()
 	dealer_hand.append(deal_card())
-	dealer_hand.append(deal_card())  # SCRUM-155: This card stays hidden
+	dealer_hand.append(deal_card())
 	dealer_card_hidden = true
-	update_dealer_score()  # SCRUM-172: Update dealer score display
-	# SCRUM-156: Print verification
+	update_dealer_score()
 	print("Dealer hand: ", dealer_hand, " (second card hidden)")
 
-## Start a new round of Blackjack
 func start_round() -> void:
-	# Reset result label
 	if result_label:
 		result_label.visible = false
-	# SCRUM-146: Shuffle at each round start
 	shuffle_deck()
 	deal_initial_player_cards()
 	deal_initial_dealer_cards()
 	print("=== NEW ROUND STARTED ===")
 
 # === SCRUM-113: Bet input ===
-## Get current bet amount from SpinBox
 func get_bet_amount() -> int:
 	if bet_spinbox:
 		return int(bet_spinbox.value)
 	return 0
 
-## Place bet and start round (basic version - validation added in SCRUM-118)
+# === SCRUM-118: Bet validation ===
+func validate_bet(amount: int) -> bool:
+	var balance = BalanceManager.get_balance()
+	print("DEBUG validate_bet: amount=", amount, " balance=", balance)
+	
+	# Check for minimum bet
+	if amount < 10:
+		print("DEBUG: Bet too small!")
+		show_result("Minimum bet is $10!")
+		if bet_spinbox:
+			bet_spinbox.value = 10
+		return false
+	
+	# Check if player can afford bet
+	if amount > balance:
+		print("DEBUG: Bet too big!")
+		show_result("Insufficient balance! Max: $" + str(balance))
+		if bet_spinbox:
+			bet_spinbox.max_value = balance
+			bet_spinbox.value = balance
+		return false
+	
+	print("DEBUG: Validation passed!")
+	return true
+
 func place_bet() -> void:
-	current_bet = get_bet_amount()
+	var amount = get_bet_amount()
+	print("DEBUG place_bet: amount=", amount)
+	
+	# SCRUM-118: Validate bet before proceeding
+	if not validate_bet(amount):
+		print("DEBUG: Validation failed, stopping")
+		return
+	
+	current_bet = amount
 	print("Bet placed: $", current_bet)
 	
 	# Disable betting UI during round
@@ -178,35 +231,33 @@ func place_bet() -> void:
 	# Start the round
 	start_round()
 
-## SCRUM-113: Connected to PlaceBetButton.pressed signal
 func _on_place_bet_button_pressed() -> void:
+	print("DEBUG: Place Bet button pressed!")
 	place_bet()
 
 # === SCRUM-162: Hit button ===
-## SCRUM-165: Deal one card to player and check for bust
 func hit() -> void:
 	player_hand.append(deal_card())
 	update_player_score()
 	print("Player HITS. Hand: ", player_hand, " Score: ", calculate_score(player_hand))
-	# SCRUM-166: Check for bust (over 21)
 	if calculate_score(player_hand) > 21:
 		show_result("BUST! You lose.")
 		end_round(false)
 
-## Show result message on screen
 func show_result(message: String) -> void:
+	print("DEBUG show_result: ", message)
 	if result_label:
 		result_label.text = message
 		result_label.visible = true
+	else:
+		print("ERROR: result_label is null!")
 
-## End round - disable action buttons, re-enable betting
 func end_round(_player_wins: bool) -> void:
 	if hit_button:
 		hit_button.disabled = true
 	if stand_button:
 		stand_button.disabled = true
 	
-	# SCRUM-113: Re-enable betting for next round
 	if bet_spinbox:
 		bet_spinbox.editable = true
 	if place_bet_button:
@@ -214,49 +265,38 @@ func end_round(_player_wins: bool) -> void:
 	
 	current_bet = 0
 
-## SCRUM-164: Connected to HitButton.pressed signal
 func _on_hit_button_pressed() -> void:
 	hit()
 
 # === SCRUM-167: Stand button ===
-## SCRUM-170: Disable buttons and trigger dealer
 func stand() -> void:
 	print("Player STANDS with score: ", calculate_score(player_hand))
-	# Disable player action buttons
 	if hit_button:
 		hit_button.disabled = true
 	if stand_button:
 		stand_button.disabled = true
-	# SCRUM-171: Trigger dealer's turn
 	dealer_draw()
 
-## SCRUM-169: Connected to StandButton.pressed signal
 func _on_stand_button_pressed() -> void:
 	stand()
 
 # === SCRUM-172: Dealer draw logic ===
-## SCRUM-172: Reveal dealer's hidden card
 func reveal_dealer_card() -> void:
 	dealer_card_hidden = false
 	update_dealer_score()
 	print("Dealer reveals hidden card! Full hand: ", dealer_hand)
 
-## SCRUM-172: Dealer draws cards until reaching 17 or higher
 func dealer_draw() -> void:
-	# First reveal the hidden card
 	reveal_dealer_card()
 	
-	# Dealer must hit on 16 or less, stand on 17 or more
 	while calculate_score(dealer_hand) < 17:
 		dealer_hand.append(deal_card())
 		update_dealer_score()
 		print("Dealer draws. Hand: ", dealer_hand, " Score: ", calculate_score(dealer_hand))
 	
 	print("Dealer stands with: ", calculate_score(dealer_hand))
-	# Determine winner
 	check_winner()
 
-## SCRUM-172: Compare scores and determine winner
 func check_winner() -> void:
 	var player_score = calculate_score(player_hand)
 	var dealer_score = calculate_score(dealer_hand)

@@ -41,7 +41,7 @@ func _ready() -> void:
 	
 	# SCRUM-118: Set SpinBox min and max to current balance
 	if bet_spinbox and BalanceManager:
-		bet_spinbox.min_value = 9
+		bet_spinbox.min_value = 10
 		bet_spinbox.max_value = BalanceManager.get_balance()
 		bet_spinbox.value = 10
 		# Gauti LineEdit iš SpinBox ir prijungti signalą
@@ -206,15 +206,15 @@ func validate_bet(amount: int) -> bool:
 
 func place_bet() -> void:
 	var amount = get_bet_amount()
-	print("DEBUG place_bet: amount=", amount)
 	
-	# SCRUM-118: Validate bet before proceeding
 	if not validate_bet(amount):
-		print("DEBUG: Validation failed, stopping")
 		return
 	
 	current_bet = amount
-	print("Bet placed: $", current_bet)
+	
+	# SCRUM-123: Deduct bet from balance
+	BalanceManager.subtract_balance(current_bet)
+	print("Bet placed: $", current_bet, " | New balance: $", BalanceManager.get_balance())
 	
 	# Disable betting UI during round
 	if bet_spinbox:
@@ -252,18 +252,49 @@ func show_result(message: String) -> void:
 	else:
 		print("ERROR: result_label is null!")
 
-func end_round(_player_wins: bool) -> void:
+func end_round(player_wins: bool) -> void:
 	if hit_button:
 		hit_button.disabled = true
 	if stand_button:
 		stand_button.disabled = true
 	
+	# After 2 seconds, reset display (optional)
+	await get_tree().create_timer(2.0).timeout
+	reset_for_new_round()
+	
+	# SCRUM-123: Handle payouts
+	if player_wins:
+		# Player wins: return bet + winnings (2x bet total)
+		var winnings = current_bet * 2
+		BalanceManager.add_balance(winnings)
+		print("Player wins! Payout: $", winnings)
+	elif result_label and "PUSH" in result_label.text.to_upper():
+		# Push (tie): return original bet
+		BalanceManager.add_balance(current_bet)
+		print("Push! Bet returned: $", current_bet)
+	else:
+		# Player loses: bet already deducted, nothing to do
+		print("Player loses. Bet lost: $", current_bet)
+	
+	# Re-enable betting for next round
 	if bet_spinbox:
 		bet_spinbox.editable = true
 	if place_bet_button:
 		place_bet_button.disabled = false
 	
+	# Reset current bet
 	current_bet = 0
+
+func reset_for_new_round() -> void:
+	if result_label:
+		result_label.visible = false
+	player_hand.clear()
+	dealer_hand.clear()
+	dealer_card_hidden = true
+	if player_score_label:
+		player_score_label.text = "Your Score: 0"
+	if dealer_score_label:
+		dealer_score_label.text = "Dealer: ?"
 
 func _on_hit_button_pressed() -> void:
 	hit()

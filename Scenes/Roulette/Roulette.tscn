@@ -61,4 +61,16 @@ grow_vertical = 0
 theme_override_font_sizes/font_size = 18
 text = "← Back to Menu"
 
+[node name="BetRedButton" type="Button" parent="." unique_id=314479682]
+layout_mode = 1
+anchors_preset = -1
+offset_left = 100.0
+offset_top = 200.0
+offset_right = 250.0
+offset_bottom = 350.0
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 18
+text = "BET RED"
+
 [connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="BetRedButton" to="." method="_on_bet_red_button_pressed"]

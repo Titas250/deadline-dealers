@@ -72,5 +72,41 @@ theme_override_colors/font_color = Color(1, 0, 0, 1)
 theme_override_font_sizes/font_size = 18
 text = "BET RED"
 
+[node name="NumberBetLabel" type="Label" parent="." unique_id=309884811]
+layout_mode = 0
+offset_left = 96.0
+offset_top = 370.0
+offset_right = 217.0
+offset_bottom = 393.0
+text = "Bet on number:"
+
+[node name="NumberBetInput" type="SpinBox" parent="." unique_id=782001822]
+layout_mode = 0
+offset_left = 229.0
+offset_top = 369.0
+offset_right = 315.5
+offset_bottom = 409.0
+max_value = 36.0
+
+[node name="ConfirmNumberBetButton" type="Button" parent="." unique_id=596737439]
+layout_mode = 0
+offset_left = 332.0
+offset_top = 377.0
+offset_right = 432.0
+offset_bottom = 417.0
+theme_override_font_sizes/font_size = 14
+text = "CONFIRM"
+
+[node name="BetBlackButton" type="Button" parent="." unique_id=79886001]
+layout_mode = 0
+offset_left = 270.0
+offset_top = 200.0
+offset_right = 420.0
+offset_bottom = 350.0
+theme_override_colors/font_color = Color(0.13333334, 0.13333334, 0.13333334, 1)
+theme_override_font_sizes/font_size = 18
+text = "BET BLACK"
+
 [connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="BetRedButton" to="." method="_on_bet_red_button_pressed"]
+[connection signal="pressed" from="ConfirmNumberBetButton" to="." method="_on_confirm_number_bet_button_pressed"]

@@ -1,4 +1,6 @@
 Button
+SpinBox
+Label
 Node
 Sprite2D
 MenuButton

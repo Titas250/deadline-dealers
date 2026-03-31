@@ -11,6 +11,7 @@ extends Control
 @onready var number_bet_input: SpinBox = $NumberBetInput       # SCRUM-214
 @onready var confirm_number_button: Button = $ConfirmNumberBetButton  # SCRUM-216
 @onready var winning_number_label: Label = $WinningNumberLabel
+@onready var bet_amount_spinbox: SpinBox = $BetAmountSpinBox	# SCRUM-232
 # === SCRUM-198: Game state ===
 var winning_number: int = -1
 var bet_type: String = ""
@@ -118,13 +119,17 @@ func handle_loss() -> void:
 func reset_round() -> void:
 	bet_type = ""
 	chosen_number = -1
+	current_bet = 0  # Reset bet amount
 	
-	# Re-enable spin button
 	if spin_button:
 		spin_button.disabled = false
 	
-	# Reset button highlights
 	highlight_active_bet()
+	
+	# Update max bet to current balance
+	if bet_amount_spinbox:
+		bet_amount_spinbox.max_value = BalanceManager.get_balance()
+
 
 func get_number_color(number: int) -> String:
 	if number == 0:
@@ -142,10 +147,26 @@ func _on_bet_black_button_pressed() -> void:
 	set_bet_type("black")
 
 func set_bet_type(type: String) -> void:
+	# Get bet amount
+	if bet_amount_spinbox:
+		var bet_amount = int(bet_amount_spinbox.value)
+		
+		# Validate bet
+		if bet_amount > BalanceManager.get_balance():
+			show_message("Insufficient balance!")
+			return
+		
+		# Deduct bet from balance
+		if current_bet == 0:  # Only deduct if not already bet this round
+			BalanceManager.subtract_balance(bet_amount)
+			current_bet = bet_amount
+	
 	bet_type = type
-	chosen_number = -1
+	if type != "number":
+		chosen_number = -1
+	
 	highlight_active_bet()
-	print("Bet type set to: ", bet_type)
+	print("Bet type set to: ", bet_type, " Amount: $", current_bet)
 
 func highlight_active_bet() -> void:
 	# Reset all bet buttons to normal
@@ -187,14 +208,21 @@ func show_message(message: String) -> void:
 		result_label.text = message
 		result_label.visible = true
 
+## Handle winning bet
 func handle_win(multiplier: int) -> void:
 	var winnings = current_bet * multiplier
+	
+	# SCRUM-233: Add winnings to balance
 	BalanceManager.add_balance(winnings)
-	if multiplier == 36:
-		show_message("🎰 JACKPOT! You win $" + str(winnings) + "! 🎰")
-	else:
+	
+	# SCRUM-234: Show win message
+	if multiplier == 2:
 		show_message("Correct! You win $" + str(winnings) + "!")
+	else:
+		show_message("JACKPOT! You win $" + str(winnings) + "!")
+	
+	# SCRUM-235: Update display
 	update_balance_display()
 	
-	print("Player wins: $", winnings, " (x", multiplier, ")")
+	print("Player wins: $", winnings)
 	reset_round()

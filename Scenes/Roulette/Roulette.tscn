@@ -136,6 +136,25 @@ offset_bottom = 150.0
 theme_override_font_sizes/font_size = 28
 horizontal_alignment = 1
 
+[node name="BetAmountSpinBox" type="SpinBox" parent="." unique_id=1482722157]
+layout_mode = 0
+offset_left = 292.0
+offset_top = 444.0
+offset_right = 392.0
+offset_bottom = 484.0
+min_value = 10.0
+max_value = 1000.0
+step = 10.0
+value = 10.0
+
+[node name="BetAmountLabel" type="Label" parent="." unique_id=1366937261]
+layout_mode = 0
+offset_left = 293.0
+offset_top = 417.0
+offset_right = 390.0
+offset_bottom = 440.0
+text = "Bet Amount:"
+
 [connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="BetRedButton" to="." method="_on_bet_red_button_pressed"]
 [connection signal="pressed" from="ConfirmNumberBetButton" to="." method="_on_confirm_number_bet_button_pressed"]

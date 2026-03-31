@@ -110,14 +110,6 @@ func check_result() -> void:
 	else:
 		handle_loss()
 
-func handle_win(multiplier: int) -> void:
-	var winnings = current_bet * multiplier
-	print("Player wins: $", winnings)
-	# Payout will be added by Džiugas/Mantas
-	show_message("You WIN! +" + str(winnings))
-	reset_round()
-
-
 func handle_loss() -> void:
 	print("Player loses bet")
 	show_message("You lose. Try again!")
@@ -194,3 +186,15 @@ func show_message(message: String) -> void:
 	if result_label:
 		result_label.text = message
 		result_label.visible = true
+
+func handle_win(multiplier: int) -> void:
+	var winnings = current_bet * multiplier
+	BalanceManager.add_balance(winnings)
+	if multiplier == 36:
+		show_message("🎰 JACKPOT! You win $" + str(winnings) + "! 🎰")
+	else:
+		show_message("Correct! You win $" + str(winnings) + "!")
+	update_balance_display()
+	
+	print("Player wins: $", winnings, " (x", multiplier, ")")
+	reset_round()

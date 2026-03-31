@@ -1,5 +1,3 @@
-
-
 extends Control
 
 @onready var balance_label: Label = $BalanceLabel
@@ -31,14 +29,32 @@ func _ready() -> void:
 	update_balance_display()
 	if BalanceManager:
 		BalanceManager.balance_changed.connect(_on_balance_changed)
+	# FIX #1: Set initial max bet to current balance
+	if bet_amount_spinbox:
+		bet_amount_spinbox.max_value = BalanceManager.get_balance()
+	
+	# Connect signals via code (safety net if not connected in editor)
+	if bet_red_button and not bet_red_button.pressed.is_connected(_on_bet_red_button_pressed):
+		bet_red_button.pressed.connect(_on_bet_red_button_pressed)
+	if bet_black_button and not bet_black_button.pressed.is_connected(_on_bet_black_button_pressed):
+		bet_black_button.pressed.connect(_on_bet_black_button_pressed)
+	if confirm_number_button and not confirm_number_button.pressed.is_connected(_on_confirm_number_bet_pressed):
+		confirm_number_button.pressed.connect(_on_confirm_number_bet_pressed)
+	if spin_button and not spin_button.pressed.is_connected(_on_spin_button_pressed):
+		spin_button.pressed.connect(_on_spin_button_pressed)
+	if back_button and not back_button.pressed.is_connected(_on_back_button_pressed):
+		back_button.pressed.connect(_on_back_button_pressed)
 
 func update_balance_display() -> void:
 	if balance_label and BalanceManager:
 		balance_label.text = "Balance: $" + str(BalanceManager.get_balance())
 
+# FIX #2: Update spinbox max_value when balance changes
 func _on_balance_changed(new_balance: int) -> void:
 	if balance_label:
 		balance_label.text = "Balance: $" + str(new_balance)
+	if bet_amount_spinbox:
+		bet_amount_spinbox.max_value = new_balance
 
 func _on_back_button_pressed() -> void:
 	get_tree().change_scene_to_file("res://Scenes/MainMenu/MainMenu.tscn")
@@ -189,10 +205,9 @@ func highlight_active_bet() -> void:
 			if confirm_number_button:
 				confirm_number_button.modulate = Color(1.5, 1.5, 0.5)
 
-
+# FIX #3: Redirect signal to actual logic (in case Godot connected to this name)
 func _on_confirm_number_bet_button_pressed() -> void:
-	pass # Replace with function body.
-
+	_on_confirm_number_bet_pressed()
 
 
 func _on_spin_button_pressed() -> void:
@@ -209,6 +224,7 @@ func show_message(message: String) -> void:
 		result_label.visible = true
 
 ## Handle winning bet
+# FIX #4: Added 🎰 emoji to jackpot message (SCRUM-238)
 func handle_win(multiplier: int) -> void:
 	var winnings = current_bet * multiplier
 	
@@ -216,13 +232,15 @@ func handle_win(multiplier: int) -> void:
 	BalanceManager.add_balance(winnings)
 	
 	# SCRUM-234: Show win message
-	if multiplier == 2:
+	if multiplier == 36:
+		show_message("🎰 JACKPOT! You win $" + str(winnings) + "! 🎰")
+	elif multiplier == 2:
 		show_message("Correct! You win $" + str(winnings) + "!")
 	else:
-		show_message("JACKPOT! You win $" + str(winnings) + "!")
+		show_message("You win $" + str(winnings) + "!")
 	
 	# SCRUM-235: Update display
 	update_balance_display()
 	
-	print("Player wins: $", winnings)
+	print("Player wins: $", winnings, " (x", multiplier, ")")
 	reset_round()

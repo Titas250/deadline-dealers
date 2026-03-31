@@ -3,6 +3,8 @@
 extends Control
 
 @onready var balance_label: Label = $BalanceLabel
+@onready var spin_button: Button = $SpinButton           # SCRUM-219
+@onready var result_label: Label = $ResultLabel
 @onready var back_button: Button = $BackButton
 @onready var bet_red_button: Button = $BetRedButton
 @onready var bet_black_button: Button = $BetBlackButton
@@ -55,7 +57,7 @@ func get_number_color(number: int) -> String:
 	return "BLACK"
 
 # === SCRUM-203: Bet Red ===
-func _on_bet_red_button_pressed() -> void:
+func _on_bet_red_button_pressed() -> void: 
 	set_bet_type("red")
 
 # === SCRUM-208: Bet Black ===
@@ -92,3 +94,18 @@ func highlight_active_bet() -> void:
 
 func _on_confirm_number_bet_button_pressed() -> void:
 	pass # Replace with function body.
+
+
+
+func _on_spin_button_pressed() -> void:
+	if bet_type == "":
+		show_message("Please place a bet first!")
+		return
+	if spin_button:
+		spin_button.disabled = true
+		spin()
+		
+func show_message(message: String) -> void:
+	if result_label:
+		result_label.text = message
+		result_label.visible = true

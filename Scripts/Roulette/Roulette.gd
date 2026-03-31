@@ -10,7 +10,7 @@ extends Control
 @onready var bet_black_button: Button = $BetBlackButton
 @onready var number_bet_input: SpinBox = $NumberBetInput       # SCRUM-214
 @onready var confirm_number_button: Button = $ConfirmNumberBetButton  # SCRUM-216
-
+@onready var winning_number_label: Label = $WinningNumberLabel
 # === SCRUM-198: Game state ===
 var winning_number: int = -1
 var bet_type: String = ""
@@ -44,10 +44,37 @@ func _on_back_button_pressed() -> void:
 
 # === SCRUM-198: Spin logic ===
 func spin() -> void:
+# SCRUM-200: Random number 0-36
 	winning_number = randi_range(0, 36)
+	
+	# SCRUM-202: Print for verification
 	print("=== SPIN RESULT ===")
 	print("Winning number: ", winning_number)
-	print("Color: ", get_number_color(winning_number))
+	
+	# SCRUM-225: Show winning number on screen
+	var color = get_number_color(winning_number)
+	print("Color: ", color)
+	
+	if winning_number_label:
+		winning_number_label.visible = true
+		# SCRUM-226: Show number with color
+		match color:
+			"RED":
+				winning_number_label.text = "🔴 " + str(winning_number) + " RED"
+				winning_number_label.add_theme_color_override("font_color", Color.RED)
+			"BLACK":
+				winning_number_label.text = "⚫ " + str(winning_number) + " BLACK"
+				winning_number_label.add_theme_color_override("font_color", Color.WHITE)
+			"GREEN":
+				winning_number_label.text = "🟢 0 GREEN"
+				winning_number_label.add_theme_color_override("font_color", Color.GREEN)
+	
+	# Check result (will be implemented in SCRUM-227)
+	check_result()
+
+func check_result() -> void:
+	print("TODO: Check if player won")
+	pass
 
 func get_number_color(number: int) -> String:
 	if number == 0:

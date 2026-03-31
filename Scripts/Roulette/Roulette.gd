@@ -17,7 +17,7 @@ var bet_type: String = ""
 var chosen_number: int = -1
 var current_bet: int = 0
 var red_numbers: Array = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]
-
+var black_numbers: Array = [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35]
 
 func _on_confirm_number_bet_pressed() -> void:
 	if number_bet_input:
@@ -73,8 +73,66 @@ func spin() -> void:
 	check_result()
 
 func check_result() -> void:
-	print("TODO: Check if player won")
-	pass
+	var won: bool = false
+	var payout_multiplier: int = 0
+	
+	match bet_type:
+		"red":
+			# SCRUM-229: Check if winning number is in red array
+			if winning_number in red_numbers:
+				won = true
+				payout_multiplier = 2
+				print("RED bet WINS!")
+			else:
+				print("RED bet loses")
+		
+		"black":
+			# SCRUM-230: Check if winning number is in black array
+			if winning_number in black_numbers:
+				won = true
+				payout_multiplier = 2
+				print("BLACK bet WINS!")
+			else:
+				print("BLACK bet loses")
+		
+		"number":
+			# SCRUM-231: Check if winning number matches chosen number
+			if winning_number == chosen_number:
+				won = true
+				payout_multiplier = 36
+				print("NUMBER bet WINS! Jackpot!")
+			else:
+				print("NUMBER bet loses (chose ", chosen_number, ", got ", winning_number, ")")
+	
+	# Handle payout (will be connected to SCRUM-232/236)
+	if won:
+		handle_win(payout_multiplier)
+	else:
+		handle_loss()
+
+func handle_win(multiplier: int) -> void:
+	var winnings = current_bet * multiplier
+	print("Player wins: $", winnings)
+	# Payout will be added by Džiugas/Mantas
+	show_message("You WIN! +" + str(winnings))
+	reset_round()
+
+
+func handle_loss() -> void:
+	print("Player loses bet")
+	show_message("You lose. Try again!")
+	reset_round()
+
+func reset_round() -> void:
+	bet_type = ""
+	chosen_number = -1
+	
+	# Re-enable spin button
+	if spin_button:
+		spin_button.disabled = false
+	
+	# Reset button highlights
+	highlight_active_bet()
 
 func get_number_color(number: int) -> String:
 	if number == 0:

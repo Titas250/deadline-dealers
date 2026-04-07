@@ -1,5 +1,5 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1774985270
+::res://::1775041848
 icon.svg::CompressedTexture2D::2640024836966822902::1773685335::1773685450::1::::<><><>0<>0<>e4dc3eccf5eb90b1b00ad537b8b8c352<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
 README.md::TextFile::-1::1773685335::0::1::::<><><>0<>0<><>::
 ::res://Assets/::1773685335
@@ -30,15 +30,15 @@ TestScene.tscn::PackedScene::8082800509414478572::1773826499::0::1::::<><><>0<>0
 Blackjack.tscn::PackedScene::7137209959528983899::1773826699::0::1::::<><><>0<>0<><>::uid://dbsob3bgmurj0::::res://Scripts/Blackjack/Blackjack.gd
 ::res://Scenes/MainMenu/::1773826576
 MainMenu.tscn::PackedScene::3047390264282626724::1773826576::0::1::::<><><>0<>0<><>::uid://gdwxjmljaoyw::::res://Scripts/MainMenu/MainMenu.gd<>uid://bofbfpkhbw4hk::::res://Assets/Images/MainMenu/pickurpoison-removebg-preview.png<>uid://b36rgyirqdo6j::::res://Assets/Images/MainMenu/roullete.png<>uid://xocxuiuxgjxl::::res://Assets/Images/MainMenu/gear-removebg-preview.png
-::res://Scenes/Roulette/::1774985255
-Roulette.tscn::PackedScene::3952944018571248242::1774985255::0::1::::<><><>0<>0<><>::uid://cxh0lsmf08iqs::::res://Scripts/Roulette/Roulette.gd
+::res://Scenes/Roulette/::1774985799
+Roulette.tscn::PackedScene::3952944018571248242::1774985799::0::1::::<><><>0<>0<><>::uid://cxh0lsmf08iqs::::res://Scripts/Roulette/Roulette.gd
 ::res://Scripts/::1773687232
 BalanceManager.gd::GDScript::9216080507494140292::1773687232::0::1::::<>Node<><>0<>0<><>::
 ::res://Scripts/Blackjack/::1773826607
 Blackjack.gd::GDScript::7267462990471109999::1773826607::0::1::::<>Control<><>0<>0<><>::
 ::res://Scripts/MainMenu/::1773687269
 MainMenu.gd::GDScript::428703533950686446::1773687269::0::1::::<>Control<><>0<>0<><>::
-::res://Scripts/Roulette/::1774985255
-Roulette.gd::GDScript::6403173948111328778::1774985255::0::1::::<>Control<><>0<>0<><>::
+::res://Scripts/Roulette/::1774985621
+Roulette.gd::GDScript::6403173948111328778::1774985621::0::1::::<>Control<><>0<>0<><>::
 ::res://Scripts/Test/::1773685335
 test_scene.gd::GDScript::1165880081903188148::1773685335::0::1::::<>Node<><>0<>0<><>::

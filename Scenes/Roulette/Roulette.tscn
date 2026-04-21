@@ -155,6 +155,16 @@ offset_right = 390.0
 offset_bottom = 440.0
 text = "Bet Amount:"
 
+[node name="NewRoundButton" type="Button" parent="." unique_id=1234567890]
+visible = false
+layout_mode = 0
+offset_left = 500.0
+offset_top = 195.0
+offset_right = 750.0
+offset_bottom = 235.0
+theme_override_font_sizes/font_size = 20
+text = "New Round"
+
 [connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]
 [connection signal="pressed" from="BetRedButton" to="." method="_on_bet_red_button_pressed"]
 [connection signal="pressed" from="ConfirmNumberBetButton" to="." method="_on_confirm_number_bet_button_pressed"]

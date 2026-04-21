@@ -10,6 +10,7 @@ extends Control
 @onready var confirm_number_button: Button = $ConfirmNumberBetButton  # SCRUM-216
 @onready var winning_number_label: Label = $WinningNumberLabel
 @onready var bet_amount_spinbox: SpinBox = $BetAmountSpinBox	# SCRUM-232
+@onready var new_round_button: Button = $NewRoundButton  # SCRUM-240
 # === SCRUM-198: Game state ===
 var winning_number: int = -1
 var bet_type: String = ""
@@ -44,6 +45,11 @@ func _ready() -> void:
 		spin_button.pressed.connect(_on_spin_button_pressed)
 	if back_button and not back_button.pressed.is_connected(_on_back_button_pressed):
 		back_button.pressed.connect(_on_back_button_pressed)
+	# SCRUM-240: New Round button
+	if new_round_button:
+		new_round_button.visible = false
+		if not new_round_button.pressed.is_connected(_on_new_round_pressed):
+			new_round_button.pressed.connect(_on_new_round_pressed)
 
 func update_balance_display() -> void:
 	if balance_label and BalanceManager:
@@ -130,7 +136,11 @@ func check_result() -> void:
 func handle_loss() -> void:
 	print("Player loses bet")
 	show_message("You lose. Try again!")
-	reset_round()
+	if spin_button:
+		spin_button.disabled = true
+	# SCRUM-244: Show New Round button
+	if new_round_button:
+		new_round_button.visible = true
 
 func reset_round() -> void:
 	bet_type = ""
@@ -241,6 +251,38 @@ func handle_win(multiplier: int) -> void:
 	
 	# SCRUM-235: Update display
 	update_balance_display()
-	
+
 	print("Player wins: $", winnings, " (x", multiplier, ")")
-	reset_round()
+	if spin_button:
+		spin_button.disabled = true
+	# SCRUM-244: Show New Round button
+	if new_round_button:
+		new_round_button.visible = true
+
+# === SCRUM-240: New Round button ===
+func _on_new_round_pressed() -> void:
+	# SCRUM-243: Reset round state
+	bet_type = ""
+	chosen_number = -1
+	current_bet = 0
+
+	# Hide result labels
+	if result_label:
+		result_label.visible = false
+	if winning_number_label:
+		winning_number_label.visible = false
+
+	# Re-enable spin
+	if spin_button:
+		spin_button.disabled = false
+
+	# Reset bet highlights
+	highlight_active_bet()
+
+	# Update max bet
+	if bet_amount_spinbox:
+		bet_amount_spinbox.max_value = BalanceManager.get_balance()
+
+	# SCRUM-244: Hide New Round button
+	if new_round_button:
+		new_round_button.visible = false

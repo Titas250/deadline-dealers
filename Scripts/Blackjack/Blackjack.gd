@@ -241,8 +241,8 @@ func hit() -> void:
 	update_player_score()
 	print("Player HITS. Hand: ", player_hand, " Score: ", calculate_score(player_hand))
 	if calculate_score(player_hand) > 21:
-		show_result("BUST! You lose.")
 		end_round(false)
+
 
 func show_result(message: String) -> void:
 	print("DEBUG show_result: ", message)
@@ -253,37 +253,33 @@ func show_result(message: String) -> void:
 		print("ERROR: result_label is null!")
 
 func end_round(player_wins: bool) -> void:
+	# SCRUM-182: Disable game buttons
 	if hit_button:
 		hit_button.disabled = true
 	if stand_button:
 		stand_button.disabled = true
 	
-	# After 2 seconds, reset display (optional)
-	await get_tree().create_timer(2.0).timeout
-	reset_for_new_round()
-	
-	# SCRUM-123: Handle payouts
+	# SCRUM-184/185/186: Handle payouts BEFORE reset
 	if player_wins:
-		# Player wins: return bet + winnings (2x bet total)
 		var winnings = current_bet * 2
-		BalanceManager.add_balance(winnings)
+		BalanceManager.add_funds(winnings)
+		show_result("You Win! +" + str(winnings) + " chips")
 		print("Player wins! Payout: $", winnings)
 	elif result_label and "PUSH" in result_label.text.to_upper():
-		# Push (tie): return original bet
-		BalanceManager.add_balance(current_bet)
+		BalanceManager.add_funds(current_bet)
+		show_result("Push! Bet returned")
 		print("Push! Bet returned: $", current_bet)
 	else:
-		# Player loses: bet already deducted, nothing to do
+		show_result("You Lose!")
 		print("Player loses. Bet lost: $", current_bet)
 	
-	# Re-enable betting for next round
-	if bet_spinbox:
-		bet_spinbox.editable = true
-	if place_bet_button:
-		place_bet_button.disabled = false
+	# SCRUM-187: Update display after every outcome
+	update_balance_display()
 	
-	# Reset current bet
-	current_bet = 0
+	# SCRUM-188: Show Play Again button (Džiugas adds this node)
+	if has_node("PlayAgainButton"):
+		$PlayAgainButton.visible = true
+
 
 func reset_for_new_round() -> void:
 	if result_label:
@@ -333,18 +329,15 @@ func check_winner() -> void:
 	var dealer_score = calculate_score(dealer_hand)
 	
 	print("=== FINAL SCORES ===")
-	print("Player: ", player_score)
-	print("Dealer: ", dealer_score)
+	print("Player: ", player_score, " | Dealer: ", dealer_score)
 	
 	if dealer_score > 21:
-		show_result("Dealer BUSTS! You WIN!")
 		end_round(true)
 	elif player_score > dealer_score:
-		show_result("You WIN!")
 		end_round(true)
 	elif dealer_score > player_score:
-		show_result("Dealer WINS!")
 		end_round(false)
 	else:
+		# Push — specialus atvejis, pranešimą nustatom prieš end_round
 		show_result("PUSH! It's a tie.")
 		end_round(false)

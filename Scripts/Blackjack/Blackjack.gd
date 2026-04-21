@@ -21,6 +21,7 @@ var current_bet: int = 0
 @onready var bet_spinbox: SpinBox = $BetSpinBox  # SCRUM-113
 @onready var place_bet_button: Button = $PlaceBetButton  # SCRUM-113
 @onready var bet_error_label: Label = $BetErrorLabel  # SCRUM-118: Klaidos žinutė
+@onready var play_again_button: Button = $PlayAgainButton  # SCRUM-188
 
 ## Blackjack game scene script
 func _ready() -> void:
@@ -49,6 +50,13 @@ func _ready() -> void:
 		if line_edit:
 			line_edit.text_changed.connect(_on_bet_text_changed)
 		print("DEBUG _ready: SpinBox min=", bet_spinbox.min_value, " max=", bet_spinbox.max_value)
+		# SCRUM-188: Play Again button
+		if play_again_button:
+			play_again_button.visible = false
+			if not play_again_button.pressed.is_connected(_on_play_again_pressed):
+				play_again_button.pressed.connect(_on_play_again_pressed)
+		
+		
 
 func _on_bet_text_changed(new_text: String) -> void:
 	if new_text.is_empty():
@@ -341,3 +349,19 @@ func check_winner() -> void:
 		# Push — specialus atvejis, pranešimą nustatom prieš end_round
 		show_result("PUSH! It's a tie.")
 		end_round(false)
+
+func _on_play_again_pressed() -> void:
+	# SCRUM-191: Reset round state
+	reset_for_new_round()
+	current_bet = 0
+	
+	# Re-enable betting
+	if bet_spinbox:
+		bet_spinbox.editable = true
+		bet_spinbox.max_value = BalanceManager.get_balance()
+	if place_bet_button:
+		place_bet_button.disabled = false
+	
+	# SCRUM-192: Hide Play Again button
+	if play_again_button:
+		play_again_button.visible = false

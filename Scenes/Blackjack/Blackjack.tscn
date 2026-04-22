@@ -94,28 +94,28 @@ layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -140.0
-offset_top = 520.0
-offset_right = -20.0
-offset_bottom = 570.0
+offset_left = -190.0
+offset_top = 470.0
+offset_right = -10.0
+offset_bottom = 630.0
 grow_horizontal = 2
-theme_override_font_sizes/font_size = 20
+expand_icon = true
 disabled = true
-text = "HIT"
+text = ""
 
 [node name="StandButton" type="Button" parent="." unique_id=1636153282]
 layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = 20.0
-offset_top = 520.0
-offset_right = 140.0
-offset_bottom = 570.0
+offset_left = 10.0
+offset_top = 470.0
+offset_right = 190.0
+offset_bottom = 630.0
 grow_horizontal = 2
-theme_override_font_sizes/font_size = 20
+expand_icon = true
 disabled = true
-text = "STAND"
+text = ""
 
 [node name="ResultLabel" type="Label" parent="." unique_id=1211931665]
 visible = false

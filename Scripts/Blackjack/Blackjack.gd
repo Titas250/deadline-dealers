@@ -32,6 +32,16 @@ func _ready() -> void:
 	build_deck()
 	shuffle_deck()
 	
+	# SCRUM-265: Load custom button images
+	if hit_button:
+		hit_button.icon = load("res://Assets/Images/hit.png")
+		hit_button.expand_icon = true
+		hit_button.text = ""
+	if stand_button:
+		stand_button.icon = load("res://Assets/Images/stand.png")
+		stand_button.expand_icon = true
+		stand_button.text = ""
+
 	# SCRUM-113: Initial button states - disabled until bet placed
 	if hit_button:
 		hit_button.disabled = true

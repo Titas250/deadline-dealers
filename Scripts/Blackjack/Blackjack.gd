@@ -126,14 +126,12 @@ func _spawn_card(value: int, hidden: bool = false) -> PanelContainer:
 func _deal_card_to(container: HBoxContainer, cards_arr: Array, value: int, hidden: bool = false) -> void:
 	var card := _spawn_card(value, hidden)
 	card.modulate.a = 0.0
-	card.position = Vector2(-80, 0)
 	container.add_child(card)
 	card.setup(value, randi() % 4, hidden)
 	cards_arr.append(card)
 
-	var tween := create_tween().set_parallel(true)
+	var tween := create_tween()
 	tween.tween_property(card, "modulate:a", 1.0, 0.25)
-	tween.tween_property(card, "position:x", 0.0, 0.25).set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
 
 func _clear_card_containers() -> void:
 	for c in _dealer_cards:

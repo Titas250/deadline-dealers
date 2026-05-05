@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__3f7459f8-1283-41b1-9013-0a5cd0b53447__createJiraIssue",
+      "mcp__3f7459f8-1283-41b1-9013-0a5cd0b53447__lookupJiraAccountId",
+      "mcp__3f7459f8-1283-41b1-9013-0a5cd0b53447__editJiraIssue"
+    ]
+  }
+}

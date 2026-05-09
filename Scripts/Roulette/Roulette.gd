@@ -141,7 +141,7 @@ func _make_number_button(n: int, bg_color: Color) -> Button:
 	return btn
 
 func _on_number_grid_pressed(n: int, btn: Button) -> void:
-	# Deselect previous
+	# Deselect previouss
 	if _selected_number_btn:
 		_selected_number_btn.modulate = Color.WHITE
 	_selected_number_btn = btn

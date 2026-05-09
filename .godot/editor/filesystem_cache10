@@ -1,5 +1,5 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1777982414
+::res://::1778064020
 icon.svg::CompressedTexture2D::2640024836966822902::1773685335::1776768826::1::::<><><>0<>0<>e4dc3eccf5eb90b1b00ad537b8b8c352<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
 README.md::TextFile::-1::1773685335::0::1::::<><><>0<>0<><>::
 ::res://Assets/::1773685335
@@ -31,8 +31,8 @@ pickurpoison-removebg-preview.png::CompressedTexture2D::3379456832976723340::177
 roullete.png::CompressedTexture2D::4416748193287077655::1773685335::1773685450::1::::<><><>0<>0<>639e23577b1383228ace1a826677928f<>res://.godot/imported/roullete.png-dc131968220d912f288bf3d1100534f7.ctex::
 ::res://Scenes/::1773826499
 TestScene.tscn::PackedScene::8082800509414478572::1773826499::0::1::::<><><>0<>0<><>::uid://qu040b0e7u7e::::res://Scripts/Test/test_scene.gd
-::res://Scenes/Blackjack/::1776851855
-Blackjack.tscn::PackedScene::7137209959528983899::1776851855::0::1::::<><><>0<>0<><>::uid://dbsob3bgmurj0::::res://Scripts/Blackjack/Blackjack.gd
+::res://Scenes/Blackjack/::1777983109
+Blackjack.tscn::PackedScene::7137209959528983899::1777983109::0::1::::<><><>0<>0<><>::uid://dbsob3bgmurj0::::res://Scripts/Blackjack/Blackjack.gd
 ::res://Scenes/MainMenu/::1773826576
 MainMenu.tscn::PackedScene::3047390264282626724::1773826576::0::1::::<><><>0<>0<><>::uid://gdwxjmljaoyw::::res://Scripts/MainMenu/MainMenu.gd<>uid://bofbfpkhbw4hk::::res://Assets/Images/MainMenu/pickurpoison-removebg-preview.png<>uid://b36rgyirqdo6j::::res://Assets/Images/MainMenu/roullete.png<>uid://xocxuiuxgjxl::::res://Assets/Images/MainMenu/gear-removebg-preview.png
 ::res://Scenes/Roulette/::1776799474
@@ -41,9 +41,9 @@ Roulette.tscn::PackedScene::3952944018571248242::1776799474::0::1::::<><><>0<>0<
 BalanceManager.gd::GDScript::9216080507494140292::1776768806::0::1::::<>Node<><>0<>0<><>::
 ::res://Scripts/Autoload/::1777900884
 SceneTransition.gd::GDScript::3527034518976190232::1777899944::0::1::::<>CanvasLayer<><>0<>0<><>::
-::res://Scripts/Blackjack/::1777981957
-Blackjack.gd::GDScript::7267462990471109999::1777981957::0::1::::<>Control<><>0<>0<><>::
-Card.gd::GDScript::7790398624107748257::1777899997::0::1::::<>PanelContainer<><>0<>0<><>::
+::res://Scripts/Blackjack/::1777982842
+Blackjack.gd::GDScript::7267462990471109999::1777982842::0::1::::<>Control<><>0<>0<><>::
+Card.gd::GDScript::7790398624107748257::1777982723::0::1::::<>PanelContainer<><>0<>0<><>::
 ::res://Scripts/MainMenu/::1777981731
 MainMenu.gd::GDScript::428703533950686446::1777981731::0::1::::<>Control<><>0<>0<><>::
 ::res://Scripts/Roulette/::1777982213

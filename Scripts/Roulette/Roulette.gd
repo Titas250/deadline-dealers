@@ -91,7 +91,7 @@ func _animate_wheel_spin() -> void:
 		.set_trans(Tween.TRANS_CUBIC)
 	await tween.finished
 
-# ── Skaičių lentelė ────────────────────────────────────────────────────────
+# ── Skaičių lentelė ───────────────────────────────────────────────────────
 
 func _setup_number_grid() -> void:
 	_number_grid = GridContainer.new()

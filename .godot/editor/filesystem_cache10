@@ -1,5 +1,5 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1778514481
+::res://::1778514561
 icon.svg::CompressedTexture2D::2640024836966822902::1774965786::1776768590::1::::<><><>0<>0<>e4dc3eccf5eb90b1b00ad537b8b8c352<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
 README.md::TextFile::-1::1774965786::0::1::::<><><>0<>0<><>::
 ::res://Assets/::1774965786
@@ -35,8 +35,8 @@ TestScene.tscn::PackedScene::8082800509414478572::1774965786::0::1::::<><><>0<>0
 Blackjack.tscn::PackedScene::7137209959528983899::1778092705::0::1::::<><><>0<>0<><>::uid://dbsob3bgmurj0::::res://Scripts/Blackjack/Blackjack.gd
 ::res://Scenes/MainMenu/::1774965786
 MainMenu.tscn::PackedScene::3047390264282626724::1774965786::0::1::::<><><>0<>0<><>::uid://gdwxjmljaoyw::::res://Scripts/MainMenu/MainMenu.gd<>uid://bofbfpkhbw4hk::::res://Assets/Images/MainMenu/pickurpoison-removebg-preview.png<>uid://b36rgyirqdo6j::::res://Assets/Images/MainMenu/roullete.png<>uid://xocxuiuxgjxl::::res://Assets/Images/MainMenu/gear-removebg-preview.png
-::res://Scenes/Roulette/::1778514372
-Roulette.tscn::PackedScene::3952944018571248242::1778514372::0::1::::<><><>0<>0<><>::uid://cxh0lsmf08iqs::::res://Scripts/Roulette/Roulette.gd
+::res://Scenes/Roulette/::1778514486
+Roulette.tscn::PackedScene::3952944018571248242::1778514486::0::1::::<><><>0<>0<><>::uid://cxh0lsmf08iqs::::res://Scripts/Roulette/Roulette.gd
 ::res://Scripts/::1778092705
 BalanceManager.gd::GDScript::9216080507494140292::1776768564::0::1::::<>Node<><>0<>0<><>::
 ::res://Scripts/Autoload/::1778092705
@@ -46,8 +46,8 @@ Blackjack.gd::GDScript::7267462990471109999::1778092705::0::1::::<>Control<><>0<
 Card.gd::GDScript::7790398624107748257::1778092705::0::1::::<>PanelContainer<><>0<>0<><>::
 ::res://Scripts/MainMenu/::1778092705
 MainMenu.gd::GDScript::428703533950686446::1778092705::0::1::::<>Control<><>0<>0<><>::
-::res://Scripts/Roulette/::1778514372
-Roulette.gd::GDScript::6403173948111328778::1778514372::0::1::::<>Control<><>0<>0<><>::
+::res://Scripts/Roulette/::1778514486
+Roulette.gd::GDScript::6403173948111328778::1778514486::0::1::::<>Control<><>0<>0<><>::
 ::res://Scripts/Test/::1774965786
 test_scene.gd::GDScript::1165880081903188148::1774965786::0::1::::<>Node<><>0<>0<><>::
 ::res://Scripts/UI/::1778092705

@@ -58,7 +58,7 @@ func _ready() -> void:
 		if not new_round_button.pressed.is_connected(_on_new_round_pressed):
 			new_round_button.pressed.connect(_on_new_round_pressed)
 
-# ── Ruletės ratas ────────────────────────────────────────────────────────
+# ── Ruletės ratas ───────────────────────────────────────────────────────
 
 func _setup_wheel() -> void:
 	var wheel_tex := load("res://Assets/Images/roulette_table.png")

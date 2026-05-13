@@ -19,6 +19,7 @@ config/run/main_scene="res://MainMenu.tscn"
 [autoload]
 
 BalanceManager="*res://Scripts/BalanceManager.gd"
+SceneTransition="*res://Scripts/Autoload/SceneTransition.gd"
 
 [dotnet]
 

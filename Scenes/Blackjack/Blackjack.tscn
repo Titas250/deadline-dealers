@@ -99,9 +99,8 @@ offset_top = 470.0
 offset_right = -10.0
 offset_bottom = 630.0
 grow_horizontal = 2
-expand_icon = true
 disabled = true
-text = ""
+expand_icon = true
 
 [node name="StandButton" type="Button" parent="." unique_id=1636153282]
 layout_mode = 1
@@ -113,9 +112,8 @@ offset_top = 470.0
 offset_right = 190.0
 offset_bottom = 630.0
 grow_horizontal = 2
-expand_icon = true
 disabled = true
-text = ""
+expand_icon = true
 
 [node name="ResultLabel" type="Label" parent="." unique_id=1211931665]
 visible = false
@@ -203,10 +201,10 @@ horizontal_alignment = 1
 
 [node name="PlayAgainButton" type="Button" parent="." unique_id=1637935550]
 layout_mode = 0
-offset_left = 490.0
-offset_top = 345.0
-offset_right = 663.0
-offset_bottom = 425.0
+offset_left = 853.0
+offset_top = 499.0
+offset_right = 1026.0
+offset_bottom = 579.0
 text = "Play Again"
 
 [connection signal="pressed" from="BackButton" to="." method="_on_back_button_pressed"]

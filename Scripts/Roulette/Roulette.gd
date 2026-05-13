@@ -1,224 +1,184 @@
 extends Control
 
+# SCRUM-283: Vizualus ruletės rato komponentas
+# SCRUM-284: Rato sukimosi animacija
+# SCRUM-285: Statymų skaičių lentelė (grid)
+# SCRUM-286: Animuotas rezultato rodymas
+
 @onready var balance_label: Label = $BalanceLabel
-@onready var spin_button: Button = $SpinButton           # SCRUM-219
+@onready var spin_button: Button = $SpinButton
 @onready var result_label: Label = $ResultLabel
 @onready var back_button: Button = $BackButton
 @onready var bet_red_button: Button = $BetRedButton
 @onready var bet_black_button: Button = $BetBlackButton
-@onready var number_bet_input: SpinBox = $NumberBetInput       # SCRUM-214
-@onready var confirm_number_button: Button = $ConfirmNumberBetButton  # SCRUM-216
+@onready var number_bet_input: SpinBox = $NumberBetInput
+@onready var confirm_number_button: Button = $ConfirmNumberBetButton
 @onready var winning_number_label: Label = $WinningNumberLabel
-@onready var bet_amount_spinbox: SpinBox = $BetAmountSpinBox	# SCRUM-232
-@onready var new_round_button: Button = $NewRoundButton  # SCRUM-240
-# === SCRUM-198: Game state ===
+@onready var bet_amount_spinbox: SpinBox = $BetAmountSpinBox
+@onready var new_round_button: Button = $NewRoundButton
+
 var winning_number: int = -1
 var bet_type: String = ""
 var chosen_number: int = -1
 var current_bet: int = 0
-var red_numbers: Array = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]
-var black_numbers: Array = [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35]
+var red_numbers: Array = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]
+var black_numbers: Array = [2,4,6,8,10,11,13,15,17,20,22,24,26,28,29,31,33,35]
 
-func _on_confirm_number_bet_pressed() -> void:
-	if number_bet_input:
-		chosen_number = int(number_bet_input.value)
-		# SCRUM-217: Number bet clears red/black bet
-		set_bet_type("number")
-		print("Number bet confirmed: ", chosen_number)
+# Vizualiniai elementai
+var _wheel_image: TextureRect
+var _number_grid: GridContainer
+var _selected_number_btn: Button = null
 
 func _ready() -> void:
 	update_balance_display()
 	if BalanceManager:
 		BalanceManager.balance_changed.connect(_on_balance_changed)
-	# FIX #1: Set initial max bet to current balance
 	if bet_amount_spinbox:
 		bet_amount_spinbox.max_value = BalanceManager.get_balance()
-	
-	# Connect signals via code (safety net if not connected in editor)
+
+	_setup_wheel()
+	_setup_number_grid()
+
+	# Paslėpk seną number input
+	if number_bet_input: number_bet_input.visible = false
+	if confirm_number_button: confirm_number_button.visible = false
+	if has_node("NumberBetLabel"): $NumberBetLabel.visible = false
+
+	# Signalai
 	if bet_red_button and not bet_red_button.pressed.is_connected(_on_bet_red_button_pressed):
 		bet_red_button.pressed.connect(_on_bet_red_button_pressed)
 	if bet_black_button and not bet_black_button.pressed.is_connected(_on_bet_black_button_pressed):
 		bet_black_button.pressed.connect(_on_bet_black_button_pressed)
-	if confirm_number_button and not confirm_number_button.pressed.is_connected(_on_confirm_number_bet_pressed):
-		confirm_number_button.pressed.connect(_on_confirm_number_bet_pressed)
 	if spin_button and not spin_button.pressed.is_connected(_on_spin_button_pressed):
 		spin_button.pressed.connect(_on_spin_button_pressed)
 	if back_button and not back_button.pressed.is_connected(_on_back_button_pressed):
 		back_button.pressed.connect(_on_back_button_pressed)
-	# SCRUM-240: New Round button
 	if new_round_button:
 		new_round_button.visible = false
 		if not new_round_button.pressed.is_connected(_on_new_round_pressed):
 			new_round_button.pressed.connect(_on_new_round_pressed)
 
-func update_balance_display() -> void:
-	if balance_label and BalanceManager:
-		balance_label.text = "Balance: $" + str(BalanceManager.get_balance())
+# ── Ruletės ratas ───────────────────────────────────────────────────────
 
-# FIX #2: Update spinbox max_value when balance changes
-func _on_balance_changed(new_balance: int) -> void:
-	if balance_label:
-		balance_label.text = "Balance: $" + str(new_balance)
-	if bet_amount_spinbox:
-		bet_amount_spinbox.max_value = new_balance
+func _setup_wheel() -> void:
+	var wheel_tex := load("res://Assets/Images/roulette_table.png")
+	if not wheel_tex:
+		return
 
-func _on_back_button_pressed() -> void:
-	get_tree().change_scene_to_file("res://Scenes/MainMenu/MainMenu.tscn")
+	_wheel_image = TextureRect.new()
+	_wheel_image.texture = wheel_tex
+	_wheel_image.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
+	_wheel_image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	_wheel_image.custom_minimum_size = Vector2(220, 220)
+	_wheel_image.pivot_offset = Vector2(110, 110)
 
-# === SCRUM-198: Spin logic ===
-func spin() -> void:
-# SCRUM-200: Random number 0-36
-	winning_number = randi_range(0, 36)
-	
-	# SCRUM-202: Print for verification
-	print("=== SPIN RESULT ===")
-	print("Winning number: ", winning_number)
-	
-	# SCRUM-225: Show winning number on screen
-	var color = get_number_color(winning_number)
-	print("Color: ", color)
-	
-	if winning_number_label:
-		winning_number_label.visible = true
-		# SCRUM-226: Show number with color
-		match color:
-			"RED":
-				winning_number_label.text = "🔴 " + str(winning_number) + " RED"
-				winning_number_label.add_theme_color_override("font_color", Color.RED)
-			"BLACK":
-				winning_number_label.text = "⚫ " + str(winning_number) + " BLACK"
-				winning_number_label.add_theme_color_override("font_color", Color.WHITE)
-			"GREEN":
-				winning_number_label.text = "🟢 0 GREEN"
-				winning_number_label.add_theme_color_override("font_color", Color.GREEN)
-	
-	# Check result (will be implemented in SCRUM-227)
-	check_result()
+	# Pozicionuok viršuje dešinėje
+	_wheel_image.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	_wheel_image.offset_left = -260.0
+	_wheel_image.offset_right = -30.0
+	_wheel_image.offset_top = 80.0
+	_wheel_image.offset_bottom = 310.0
+	add_child(_wheel_image)
 
-func check_result() -> void:
-	var won: bool = false
-	var payout_multiplier: int = 0
-	
-	match bet_type:
-		"red":
-			# SCRUM-229: Check if winning number is in red array
-			if winning_number in red_numbers:
-				won = true
-				payout_multiplier = 2
-				print("RED bet WINS!")
-			else:
-				print("RED bet loses")
-		
-		"black":
-			# SCRUM-230: Check if winning number is in black array
-			if winning_number in black_numbers:
-				won = true
-				payout_multiplier = 2
-				print("BLACK bet WINS!")
-			else:
-				print("BLACK bet loses")
-		
-		"number":
-			# SCRUM-231: Check if winning number matches chosen number
-			if winning_number == chosen_number:
-				won = true
-				payout_multiplier = 36
-				print("NUMBER bet WINS! Jackpot!")
-			else:
-				print("NUMBER bet loses (chose ", chosen_number, ", got ", winning_number, ")")
-	
-	# Handle payout (will be connected to SCRUM-232/236)
-	if won:
-		handle_win(payout_multiplier)
-	else:
-		handle_loss()
+func _animate_wheel_spin() -> void:
+	if not _wheel_image:
+		return
+	var current_rot: float = _wheel_image.rotation
+	var spins := randf_range(4.0, 6.0) * TAU
+	var tween := create_tween()
+	tween.tween_property(_wheel_image, "rotation", current_rot + spins, 3.0)\
+		.set_ease(Tween.EASE_OUT)\
+		.set_trans(Tween.TRANS_CUBIC)
+	await tween.finished
 
-func handle_loss() -> void:
-	print("Player loses bet")
-	show_message("You lose. Try again!")
-	if spin_button:
-		spin_button.disabled = true
-	# SCRUM-244: Show New Round button
-	if new_round_button:
-		new_round_button.visible = true
+# ── Skaičių lentelė ───────────────────────────────────────────────────────
 
-func reset_round() -> void:
-	bet_type = ""
-	chosen_number = -1
-	current_bet = 0  # Reset bet amount
-	
-	if spin_button:
-		spin_button.disabled = false
-	
-	highlight_active_bet()
-	
-	# Update max bet to current balance
-	if bet_amount_spinbox:
-		bet_amount_spinbox.max_value = BalanceManager.get_balance()
+func _setup_number_grid() -> void:
+	_number_grid = GridContainer.new()
+	_number_grid.columns = 6
+	_number_grid.add_theme_constant_override("h_separation", 4)
+	_number_grid.add_theme_constant_override("v_separation", 4)
 
+	# Pozicionuok apačioje dešinėje (po ruletės ratu, netrukdo esamiems mygtukams)
+	_number_grid.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
+	_number_grid.offset_left = -370.0
+	_number_grid.offset_right = -20.0
+	_number_grid.offset_top = -330.0
+	_number_grid.offset_bottom = -20.0
+	add_child(_number_grid)
 
-func get_number_color(number: int) -> String:
-	if number == 0:
-		return "GREEN"
-	if number in red_numbers:
-		return "RED"
-	return "BLACK"
+	# 0 mygtukas (žalias)
+	var zero_btn := _make_number_button(0, Color(0.1, 0.55, 0.1))
+	_number_grid.add_child(zero_btn)
 
-# === SCRUM-203: Bet Red ===
-func _on_bet_red_button_pressed() -> void: 
-	set_bet_type("red")
+	# 1–36
+	for n in range(1, 37):
+		var is_red := n in red_numbers
+		var col := Color(0.7, 0.1, 0.1) if is_red else Color(0.12, 0.12, 0.12)
+		var btn := _make_number_button(n, col)
+		_number_grid.add_child(btn)
 
-# === SCRUM-208: Bet Black ===
-func _on_bet_black_button_pressed() -> void:
-	set_bet_type("black")
+func _make_number_button(n: int, bg_color: Color) -> Button:
+	var btn := Button.new()
+	btn.text = str(n)
+	btn.custom_minimum_size = Vector2(52, 38)
+	btn.add_theme_font_size_override("font_size", 14)
+	btn.add_theme_color_override("font_color", Color.WHITE)
 
-func set_bet_type(type: String) -> void:
-	# Get bet amount
-	if bet_amount_spinbox:
-		var bet_amount = int(bet_amount_spinbox.value)
-		
-		# Validate bet
-		if bet_amount > BalanceManager.get_balance():
-			show_message("Insufficient balance!")
-			return
-		
-		# Deduct bet from balance
-		if current_bet == 0:  # Only deduct if not already bet this round
-			BalanceManager.subtract_balance(bet_amount)
-			current_bet = bet_amount
-	
-	bet_type = type
-	if type != "number":
-		chosen_number = -1
-	
-	highlight_active_bet()
-	print("Bet type set to: ", bet_type, " Amount: $", current_bet)
+	var style := StyleBoxFlat.new()
+	style.bg_color = bg_color
+	style.corner_radius_top_left = 4
+	style.corner_radius_top_right = 4
+	style.corner_radius_bottom_left = 4
+	style.corner_radius_bottom_right = 4
+	btn.add_theme_stylebox_override("normal", style)
 
-func highlight_active_bet() -> void:
-	# Reset all bet buttons to normal
-	if bet_red_button:
-		bet_red_button.modulate = Color.WHITE
-	if bet_black_button:
-		bet_black_button.modulate = Color.WHITE
-	if confirm_number_button:
-		confirm_number_button.modulate = Color.WHITE
-	
-	# Highlight active
-	match bet_type:
-		"red":
-			if bet_red_button:
-				bet_red_button.modulate = Color(1.5, 1.5, 0.5)
-		"black":
-			if bet_black_button:
-				bet_black_button.modulate = Color(1.5, 1.5, 0.5)
-		"number":
-			if confirm_number_button:
-				confirm_number_button.modulate = Color(1.5, 1.5, 0.5)
+	var style_hover := style.duplicate() as StyleBoxFlat
+	style_hover.bg_color = bg_color.lightened(0.25)
+	btn.add_theme_stylebox_override("hover", style_hover)
 
-# FIX #3: Redirect signal to actual logic (in case Godot connected to this name)
-func _on_confirm_number_bet_button_pressed() -> void:
+	btn.pressed.connect(_on_number_grid_pressed.bind(n, btn))
+	return btn
+
+func _on_number_grid_pressed(n: int, btn: Button) -> void:
+	# Deselect previouus
+	if _selected_number_btn:
+		_selected_number_btn.modulate = Color.WHITE
+	_selected_number_btn = btn
+	btn.modulate = Color(1.0, 1.0, 0.3)
+
+	if number_bet_input:
+		number_bet_input.value = n
 	_on_confirm_number_bet_pressed()
 
+# ── Animuotas rezultato rodymas ────────────────────────────────────────────
+
+func _show_winning_number_animated(num: int) -> void:
+	if not winning_number_label:
+		return
+	var color := get_number_color(num)
+	match color:
+		"RED":
+			winning_number_label.text = "🔴 " + str(num) + " RED"
+			winning_number_label.add_theme_color_override("font_color", Color.RED)
+		"BLACK":
+			winning_number_label.text = "⚫ " + str(num) + " BLACK"
+			winning_number_label.add_theme_color_override("font_color", Color.WHITE)
+		"GREEN":
+			winning_number_label.text = "🟢 0 GREEN"
+			winning_number_label.add_theme_color_override("font_color", Color.LIME_GREEN)
+
+	winning_number_label.pivot_offset = winning_number_label.size / 2.0
+	winning_number_label.scale = Vector2(0.3, 0.3)
+	winning_number_label.modulate.a = 0.0
+	winning_number_label.visible = true
+
+	var tween := create_tween().set_parallel(true)
+	tween.tween_property(winning_number_label, "scale", Vector2(1.0, 1.0), 0.4)\
+		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
+	tween.tween_property(winning_number_label, "modulate:a", 1.0, 0.3)
+
+# ── Spin logika ────────────────────────────────────────────────────────────
 
 func _on_spin_button_pressed() -> void:
 	if bet_type == "":
@@ -226,63 +186,136 @@ func _on_spin_button_pressed() -> void:
 		return
 	if spin_button:
 		spin_button.disabled = true
-		spin()
-		
+	await _animate_wheel_spin()
+	spin()
+
+func spin() -> void:
+	winning_number = randi_range(0, 36)
+	_show_winning_number_animated(winning_number)
+	check_result()
+
+func check_result() -> void:
+	var won: bool = false
+	var payout_multiplier: int = 0
+
+	match bet_type:
+		"red":
+			if winning_number in red_numbers:
+				won = true
+				payout_multiplier = 2
+		"black":
+			if winning_number in black_numbers:
+				won = true
+				payout_multiplier = 2
+		"number":
+			if winning_number == chosen_number:
+				won = true
+				payout_multiplier = 36
+
+	if won:
+		handle_win(payout_multiplier)
+	else:
+		handle_loss()
+
+func handle_loss() -> void:
+	show_message("You lose. Try again!")
+	if spin_button: spin_button.disabled = true
+	if new_round_button: new_round_button.visible = true
+
+func handle_win(multiplier: int) -> void:
+	var winnings := current_bet * multiplier
+	BalanceManager.add_balance(winnings)
+	if multiplier == 36:
+		show_message("🎰 JACKPOT! You win $" + str(winnings) + "! 🎰")
+	else:
+		show_message("Correct! You win $" + str(winnings) + "!")
+	update_balance_display()
+	if spin_button: spin_button.disabled = true
+	if new_round_button: new_round_button.visible = true
+
+func reset_round() -> void:
+	bet_type = ""
+	chosen_number = -1
+	current_bet = 0
+	if _selected_number_btn:
+		_selected_number_btn.modulate = Color.WHITE
+		_selected_number_btn = null
+	if spin_button: spin_button.disabled = false
+	highlight_active_bet()
+	if bet_amount_spinbox:
+		bet_amount_spinbox.max_value = BalanceManager.get_balance()
+
+func _on_confirm_number_bet_pressed() -> void:
+	if number_bet_input:
+		chosen_number = int(number_bet_input.value)
+	set_bet_type("number")
+
+func _on_confirm_number_bet_button_pressed() -> void:
+	_on_confirm_number_bet_pressed()
+
+func update_balance_display() -> void:
+	if balance_label and BalanceManager:
+		balance_label.text = "Balance: $" + str(BalanceManager.get_balance())
+
+func _on_balance_changed(new_balance: int) -> void:
+	if balance_label:
+		balance_label.text = "Balance: $" + str(new_balance)
+	if bet_amount_spinbox:
+		bet_amount_spinbox.max_value = new_balance
+
+func _on_back_button_pressed() -> void:
+	SceneTransition.change_scene("res://Scenes/MainMenu/MainMenu.tscn")
+
+func _on_bet_red_button_pressed() -> void:
+	set_bet_type("red")
+
+func _on_bet_black_button_pressed() -> void:
+	set_bet_type("black")
+
+func set_bet_type(type: String) -> void:
+	if bet_amount_spinbox:
+		var bet_amount := int(bet_amount_spinbox.value)
+		if bet_amount > BalanceManager.get_balance():
+			show_message("Insufficient balance!")
+			return
+		if current_bet == 0:
+			BalanceManager.subtract_balance(bet_amount)
+			current_bet = bet_amount
+	bet_type = type
+	if type != "number":
+		chosen_number = -1
+	highlight_active_bet()
+
+func highlight_active_bet() -> void:
+	if bet_red_button: bet_red_button.modulate = Color.WHITE
+	if bet_black_button: bet_black_button.modulate = Color.WHITE
+	match bet_type:
+		"red":
+			if bet_red_button: bet_red_button.modulate = Color(1.5, 1.5, 0.5)
+		"black":
+			if bet_black_button: bet_black_button.modulate = Color(1.5, 1.5, 0.5)
+
+func get_number_color(number: int) -> String:
+	if number == 0: return "GREEN"
+	if number in red_numbers: return "RED"
+	return "BLACK"
+
 func show_message(message: String) -> void:
 	if result_label:
 		result_label.text = message
 		result_label.visible = true
 
-## Handle winning bet
-# FIX #4: Added 🎰 emoji to jackpot message (SCRUM-238)
-func handle_win(multiplier: int) -> void:
-	var winnings = current_bet * multiplier
-	
-	# SCRUM-233: Add winnings to balance
-	BalanceManager.add_balance(winnings)
-	
-	# SCRUM-234: Show win message
-	if multiplier == 36:
-		show_message("🎰 JACKPOT! You win $" + str(winnings) + "! 🎰")
-	elif multiplier == 2:
-		show_message("Correct! You win $" + str(winnings) + "!")
-	else:
-		show_message("You win $" + str(winnings) + "!")
-	
-	# SCRUM-235: Update display
-	update_balance_display()
-
-	print("Player wins: $", winnings, " (x", multiplier, ")")
-	if spin_button:
-		spin_button.disabled = true
-	# SCRUM-244: Show New Round button
-	if new_round_button:
-		new_round_button.visible = true
-
-# === SCRUM-240: New Round button ===
 func _on_new_round_pressed() -> void:
-	# SCRUM-243: Reset round state
 	bet_type = ""
 	chosen_number = -1
 	current_bet = 0
-
-	# Hide result labels
-	if result_label:
-		result_label.visible = false
-	if winning_number_label:
-		winning_number_label.visible = false
-
-	# Re-enable spin
-	if spin_button:
-		spin_button.disabled = false
-
-	# Reset bet highlights
+	if result_label: result_label.visible = false
+	if winning_number_label: winning_number_label.visible = false
+	if spin_button: spin_button.disabled = false
 	highlight_active_bet()
-
-	# Update max bet
 	if bet_amount_spinbox:
 		bet_amount_spinbox.max_value = BalanceManager.get_balance()
-
-	# SCRUM-244: Hide New Round button
-	if new_round_button:
-		new_round_button.visible = false
+	if new_round_button: new_round_button.visible = false
+	if _selected_number_btn:
+		_selected_number_btn.modulate = Color.WHITE
+		_selected_number_btn = null

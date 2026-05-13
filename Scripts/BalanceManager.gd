@@ -1,3 +1,4 @@
+# deadline-dealers project
 extends Node
 var balance: int = 1000
 signal balance_changed(new_balance: int)

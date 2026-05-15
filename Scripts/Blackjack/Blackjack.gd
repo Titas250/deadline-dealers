@@ -1,7 +1,7 @@
 extends Control
 
 # SCRUM-279: Kortų dalinimo slide-in animacija
-# SCRUM-280: Dilerio kortos flip animacija
+# SCRUM-280: Dilerio kortos apvertimo animacija
 # SCRUM-282: Laimėjimo/pralaimėjimo animuotas overlay
 # Reikalauja: Scripts/Blackjack/Card.gd (Titas)
 

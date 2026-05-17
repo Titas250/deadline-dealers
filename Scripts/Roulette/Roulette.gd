@@ -4,7 +4,7 @@ extends Control
 # SCRUM-284: Rato sukimosi animacija
 # SCRUM-285: Statymų skaičių lentelė (grid)
 # SCRUM-286: Animuotas rezultato rodymas
-
+# SCRUM-293
 @onready var balance_label: Label = $BalanceLabel
 @onready var spin_button: Button = $SpinButton
 @onready var result_label: Label = $ResultLabel

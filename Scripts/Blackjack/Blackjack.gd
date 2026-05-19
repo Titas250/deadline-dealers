@@ -70,11 +70,11 @@ func _setup_double_down_button() -> void:
 	_double_down_button.text = "⬇ Double Down"
 	_double_down_button.custom_minimum_size = Vector2(180, 50)
 	_double_down_button.add_theme_font_size_override("font_size", 18)
-	_double_down_button.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
-	_double_down_button.offset_left = -90.0
-	_double_down_button.offset_right = 90.0
-	_double_down_button.offset_top = -210.0
-	_double_down_button.offset_bottom = -160.0
+	_double_down_button.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
+	_double_down_button.offset_left = 210.0
+	_double_down_button.offset_right = 400.0
+	_double_down_button.offset_top = 480.0
+	_double_down_button.offset_bottom = 530.0
 	_double_down_button.visible = false
 	var style := StyleBoxFlat.new()
 	style.bg_color = Color(0.6, 0.4, 0.0)

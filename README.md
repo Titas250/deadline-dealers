@@ -11,11 +11,41 @@
 
 ## Turinys
 
+- [Techninė užduotis](#techninė-užduotis)
 - [Paleidimas](#paleidimas)
 - [Žaidimai](#žaidimai)
 - [Paaiškinimas](#paaiškinimas)
 - [Projekto struktūra](#projekto-struktūra)
+- [Testavimas](#testavimas)
 - [Komanda](#komanda)
+
+---
+
+## Techninė užduotis
+
+**Užsakovas:** kazino žaidimų kūrėjai
+
+### Funkciniai reikalavimai
+
+- Žaidimas skirtas PC platformai (Windows)
+- Žaidimas apima **Blackjack** ir **Ruletės** žaidimus
+- Žaidėjas pradeda su **1000 USD** pradiniu balansu
+- Žaidėjas varžosi Blackjack'e prieš virtualų dalintuvą (AI)
+- Ruletėje galima lažintis dėl raudonų/juodų skaičių arba konkretaus skaičiaus (0–36)
+- Žaidėjas gali bet kada pereiti tarp žaidimų per pagrindinį meniu
+- Sistema rodo žaidėjo balansą **realiu laiku**
+- Kai balansas pasiekia 0, rodomas **bankroto pranešimas**
+- Žaidėjas gali iš naujo pradėti žaidimą po bankroto su 1000 USD
+
+### Nefunkciniai reikalavimai
+
+- Žaidimas valdomas **pele**
+- Palaikoma OS: **Windows 10/11**
+- Variklis: **Godot 4.6** (Direct3D 12, Jolt Physics)
+- Minimalus RAM: 4 GB
+- Disko vieta: ≤ 200 MB
+
+**Reikšminiai žodžiai:** Casino, Blackjack, Roulette, Gambling, Cards
 
 ---
 
@@ -70,6 +100,13 @@ Europietiška ruletė (0–36) su kelių tipų lažybomis.
 | 🔢 Tikslus skaičius | x36 |
 
 Paskutinių **5 sukimų** istorija rodoma ekrane kairėje.
+
+### 💸 Balanso valdymas
+
+- Pradinis balansas: **1000 USD** (kiekvienam naujam žaidimui)
+- Balansas rodomas viršutiniame kampe **visuose ekranuose realiu laiku**
+- Kai balansas pasiekia **0** — automatiškai rodoma bankroto scena
+- Bankroto ekrane paspauskite **„Bandyti vėl"** — balansas atstatomas į 1000 USD ir grįžtama į pagrindinį meniu
 
 ---
 
@@ -239,8 +276,39 @@ deadline-dealers/
 
 ---
 
+## Testavimas
+
+Testavimas atliktas **rankiniu būdu** — kiekviena funkcija tikrinama tiesiogiai žaidžiant žaidimą.
+
+| Nr. | Testo aprašymas | Laukiamas rezultatas | Faktinis rezultatas | Statusas |
+|-----|-----------------|----------------------|---------------------|----------|
+| 1 | Blackjack: Hit paspaudimas kai rankoje < 21 taškų | Nauja korta išdalinama žaidėjui | Korta išdalinama, taškai atnaujinami | ✅ PRAĖJO |
+| 2 | Blackjack: Bust — taškai viršija 21 | Žaidėjas pralaimi, rodomas pranešimas | Pranešimas rodomas, balansas atnaujinamas | ✅ PRAĖJO |
+| 3 | Blackjack: Ace logika — ranka = 21 su Ace | Ace skaičiuojamas kaip 11 | Ace = 11, teisingas rezultatas | ✅ PRAĖJO |
+| 4 | Blackjack: Ace kaip 1 — bust prevencija | Ace pakeičiamas į 1 jei suma > 21 | Ace = 1, žaidimas tęsiamas | ✅ PRAĖJO |
+| 5 | Blackjack: Dalintuvas traukia iki 17 | Dalintuvas sustoja ties 17+ | Teisingas elgesys | ✅ PRAĖJO |
+| 6 | Blackjack: Double Down | Lažybos dvigubinamos, tik viena korta | Veikia teisingai | ✅ PRAĖJO |
+| 7 | Ruletė: Lažybos raudonam, laimimas raudono | Balansas padidinamas x2 | Teisingas mokėjimas | ✅ PRAĖJO |
+| 8 | Ruletė: Lažybos skaičiui, teisingas atspėjimas | Balansas padidinamas x36 | Teisingas mokėjimas | ✅ PRAĖJO |
+| 9 | Balansas pasiekia 0 Blackjack žaidime | Rodoma bankroto scena | GameOver scena rodoma | ✅ PRAĖJO |
+| 10 | Bankrotas: Bandyti Vėl mygtukas | Balansas = 1000, grįžta į meniu | Veikia teisingai | ✅ PRAĖJO |
+| 11 | Scenos perėjimas tarp Blackjack ir pagrindinio meniu | Fade in/out animacija | Animacija veikia | ✅ PRAĖJO |
+| 12 | Lažybos > balansas (Blackjack) | Klaidos pranešimas | Pranešimas rodomas | ✅ PRAĖJO |
+
+**Rezultatas: 12/12 testų praėjo (100%)**
+
+---
+
 ## Komanda
 
 Sukurta KTU studentų kaip SCRUM komandinis projektas.
+
+| Vardas | Rolė | Indėlis |
+|--------|------|---------|
+| **Andrius Dobravolskas** | Scrum Master | BalanceManager, kodo peržiūros, repozitorija, dokumentacija |
+| **Domantas Miliauskas** | Product Owner | Bet Red funkcija, UI apdaila, klaidų taisymas |
+| **Džiugas Kaluina** | Kūrėjas | Ruletės lažybų mechanika (x2), Play Again mygtukas |
+| **Titas Lendraitis** | Kūrėjas / Menininkas | Blackjack logika, kortų grafika, GAMBA_LYNGG masktas, scenos perėjimai |
+| **Mantas Svetnickis** | Kūrėjas | Win/lose pranešimai, bankroto scena, Ruletės Spin ir x36 mechanika |
 
 > *"KTU student addiction intensifies"*

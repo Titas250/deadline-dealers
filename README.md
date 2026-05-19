@@ -11,21 +11,34 @@
 
 ## Turinys
 
-- [Apie projektą](#apie-projektą)
-- [Žaidimai](#žaidimai)
-- [Funkcijos](#funkcijos)
 - [Paleidimas](#paleidimas)
-- [Valdymas](#valdymas)
-- [Techninė informacija](#techninė-informacija)
+- [Žaidimai](#žaidimai)
+- [Paaiškinimas](#paaiškinimas)
 - [Projekto struktūra](#projekto-struktūra)
-- [Garso failai](#garso-failai)
 - [Komanda](#komanda)
 
 ---
 
-## Apie projektą
+## Paleidimas
 
-**Deadline Dealers** — tai kazino stiliaus žaidimas su dviem klasikiniais azartiniais žaidimais. Projektas sukurtas KTU studentų kaip SCRUM komandinis projektas. Žaidėjas pradeda su **$1000** ir bando kuo daugiau laimėti. Balansas išlaikomas tarp abiejų žaidimų — bankroto atveju rodomas Game Over ekranas.
+Jums reikia įdiegti **Godot Engine 4.6**. Parsisiųskite iš [godotengine.org](https://godotengine.org/download/) — papildomi įskiepiai ar priklausomybės nereikalingos.
+
+```bash
+git clone https://github.com/DomaMili/deadline-dealers.git
+cd deadline-dealers
+```
+
+Atidarykite projektą Godot:
+
+1. Paleiskite **Godot 4.6**
+2. Spausti **Import** → pasirinkti `project.godot`
+3. Spausti **▶ Run** arba **F5**
+
+### Eksportas į .exe
+
+```
+Project → Export → Windows Desktop → Export Project
+```
 
 ---
 
@@ -41,117 +54,144 @@ Klasikinis 21 kortų žaidimas prieš dilerį.
 | **Stand** | Sustoti ir leisti dileriui žaisti |
 | **Double Down** | Padvigubinti statymą, gauti 1 kortą ir automatiškai Stand |
 
-**Taisyklės:**
 - Minimalus statymas: **$10**
-- Ace skaičiuojamas kaip **11** arba **1** (automatiškai, kad neviršytų 21)
+- Ace skaičiuojamas kaip **11** arba **1** (automatiškai)
 - Dileris traukia kortą kol pasiekia **≥17**
-- Laimėjimas moka **2x** statymą
-- Lygiosios (Push) — statymas grąžinamas
-- Dilerio paslėpta korta atsiskleidžia po žaidėjo Stand
+- Laimėjimas: **2x** statymas; lygiosios grąžina statymą
 
 ### 🎡 Roulette
 
 Europietiška ruletė (0–36) su kelių tipų lažybomis.
 
-| Lažybų tipas | Sąlyga | Išmoka |
-|---|---|---|
-| 🔴 Raudona | Skaičius raudonuose | x2 |
-| ⚫ Juoda | Skaičius juoduose | x2 |
-| 🔢 Skaičius | Tikslus skaičius | x36 |
-| 1–12 | Skaičius 1–12 | x3 |
-| 13–24 | Skaičius 13–24 | x3 |
-| 25–36 | Skaičius 25–36 | x3 |
-
-**Papildomos funkcijos:**
-- Paskutinių **5 sukimų** istorija ekrane
-- Animuotas rato sukimas
-- Vizuali skaičių pasirinkimo lentelė (0–36)
-
----
-
-## Funkcijos
-
-- 💰 **Bendras balansas** — vienas $1000 balansas naudojamas abiejuose žaidimuose
-- 📊 **Statistikos ekranas** — žaidimai, laimėjimai, pralaimėjimai, didžiausias laimėjimas, laimėjimų %
-- 💀 **Game Over** — bankroto ekranas kai balansas = $0, galimybė pradėti iš naujo su $1000
-- 🎬 **Splash ekranas** — intro animacija su Gamba Lyngg logotipu
-- 🎵 **Foninė muzika** — BGM pagrindiniame meniu su loopinimo palaikymu
-- 🔊 **Garso efektai** — kortų dalinimas, laimėjimas, pralaimėjimas, sukimas
-- 🎴 **52 unikalios kortos** — pilnas kaladės sprite sheet padalintas į atskirus PNG
-- ✨ **Animacijos** — kortų fade-in, dilerio kortos apvertimas, laimėjimo overlay, mygtukų hover
-
----
-
-## Paleidimas
-
-### Reikalavimai
-- [Godot Engine 4.6](https://godotengine.org/download/)
-
-### Žingsniai
-
-```bash
-git clone https://github.com/YOUR_USERNAME/deadline-dealers.git
-cd deadline-dealers
-```
-
-1. Atidaryti **Godot 4.6**
-2. Spausti **Import** → pasirinkti `project.godot`
-3. Spausti ▶ **Run** (F5)
-
-### Eksportas (Windows .exe)
-
-`Project → Export → Windows Desktop → Export Project`
-
----
-
-## Valdymas
-
-Visas žaidimas valdomas **pele** — mygtukai, spinbox'ai, kortų lentelė.
-
-| Veiksmas | Kaip |
+| Lažybų tipas | Išmoka |
 |---|---|
-| Pasirinkti statymo sumą | SpinBox laukelis |
-| Patvirtinti statymą | „PLACE BET" mygtukas |
-| Blackjack veiksmai | Hit / Stand / Double Down mygtukai |
-| Ruletės lažybos | Spalvos, dešimtys arba skaičių lentelė |
-| Sukinėti ruletę | „🎰 SPIN!" mygtukas |
-| Grįžti į meniu | „← Back to Menu" mygtukas |
+| 🔴 Raudona / ⚫ Juoda | x2 |
+| 1–12 / 13–24 / 25–36 | x3 |
+| 🔢 Tikslus skaičius | x36 |
+
+Paskutinių **5 sukimų** istorija rodoma ekrane kairėje.
 
 ---
 
-## Techninė informacija
+## Paaiškinimas
 
-### Architektūra
+Šiame projekte naudojama **Autoload (singleton) architektūra**, kurią Godot siūlo kaip bendrų paslaugų sluoksnį. Kiekvienas autoload yra globalus ir prieinamas iš bet kurios scenos.
 
 ```
-Autoloads (globalūs):
-  BalanceManager   — žaidėjo balansas, signalai
-  SceneTransition  — scenų keitimas su fade animacija
-  StatsManager     — statistikų sekimas
-  AudioManager     — SFX grojimas
+Autoload sluoksnis (globalus):
+  BalanceManager   — žaidėjo pinigai
+  StatsManager     — laimėjimų statistika
+  AudioManager     — garsai
+  SceneTransition  — scenų keitimas
 
-Scenos:
-  Splash → MainMenu → Blackjack / Roulette
-                    → Stats
-                    → GameOver → MainMenu
+Scenų sluoksnis (naudoja Autoloads):
+  Blackjack.gd / Roulette.gd — žaidimo logika
+  MainMenu.gd                — navigacija
+  Stats.gd / GameOver.gd     — informaciniai ekranai
 ```
 
-### Autoloads
+Svarbu: scenų skriptai **nežino vienas apie kitą** — jie bendrauja tik per Autoload sluoksnį.
 
-| Autoload | Paskirtis |
-|---|---|
-| `BalanceManager` | Balansas, `balance_changed` signalas |
-| `SceneTransition` | Fade in/out tarp scenų |
-| `StatsManager` | `record_result(won, amount)`, statistikos |
-| `AudioManager` | `play_sfx(key)`, kraunа failus iš `Assets/Audio/` |
+### BalanceManager (duomenų sluoksnis)
 
-### Kortų sistema
+`BalanceManager.gd` saugo žaidėjo balansą ir skleidžia `balance_changed` signalą kiekvieną kartą kai pinigai keičiasi.
 
-Kortos saugomos kaip `card_{suit}_{value}.png`:
-- **suit**: `0`=♠ Spades, `1`=♥ Hearts, `2`=♦ Diamonds, `3`=♣ Clubs
-- **value**: `1`=Ace, `2–10`, `11`=J, `12`=Q, `13`=K
+```gdscript
+# Failas: Scripts/BalanceManager.gd
 
-Padalinta iš `deck_sheet_fixed.png` (4823×2096 px, 371×524 px per kortą).
+extends Node
+
+var balance: int = 1000
+signal balance_changed(new_balance: int)
+
+func add_balance(amount: int) -> void:
+    balance += amount
+    balance_changed.emit(balance)
+
+func subtract_balance(amount: int) -> bool:
+    if amount > balance:
+        return false
+    balance -= amount
+    balance_changed.emit(balance)
+    return true
+
+func can_afford(amount: int) -> bool:
+    return balance >= amount
+```
+
+`BalanceManager` nežino kas jį iškviečia ar kaip rodomas balansas — jis tik saugo duomenis ir praneša apie pasikeitimus.
+
+### Žaidimo logika (logikos sluoksnis)
+
+Žaidimo skriptai naudoja `BalanceManager` neturėdami žinoti kaip jis veikia viduje. Jiems tereikia žinoti kokias funkcijas jis eksponuoja.
+
+Štai kaip `Blackjack.gd` tvarkosi su statomis ir išmokomis:
+
+```gdscript
+# Failas: Scripts/Blackjack/Blackjack.gd
+
+func place_bet() -> void:
+    var amount := get_bet_amount()
+    if not validate_bet(amount):
+        return
+    current_bet = amount
+    BalanceManager.subtract_balance(current_bet)  # nežinome kaip BalanceManager veikia viduje
+    await start_round()
+
+func end_round(player_wins: bool) -> void:
+    if player_wins:
+        var winnings := current_bet * 2
+        BalanceManager.add_funds(winnings)        # tiesiog kviečiame eksponuotą metodą
+        StatsManager.record_result(true, winnings - current_bet)
+    else:
+        StatsManager.record_result(false, 0)
+    _check_game_over()
+
+func _check_game_over() -> void:
+    if BalanceManager.get_balance() == 0:
+        await get_tree().create_timer(1.8).timeout
+        get_tree().change_scene_to_file("res://Scenes/GameOver/GameOver.tscn")
+```
+
+`Roulette.gd` naudoja tą patį `BalanceManager` — jei pakeistume kaip balansas saugomas, nereikėtų keisti nei Blackjack, nei Roulette kodo.
+
+### UI sluoksnis (pateikimo sluoksnis)
+
+UI nereikia žinoti kaip skaičiuojamas balansas. Jis tiesiog **prisijungia prie signalo** ir atsinaujina kai tik kažkas pasikeičia:
+
+```gdscript
+# Failas: Scripts/MainMenu/MainMenu.gd
+
+func _ready() -> void:
+    _balance_label.text = "$ " + str(BalanceManager.get_balance())
+    BalanceManager.balance_changed.connect(_on_balance_changed)
+
+func _on_balance_changed(new_balance: int) -> void:
+    _balance_label.text = "$ " + str(new_balance)
+```
+
+Tas pats signalas veikia ir Blackjack, ir Roulette ekranuose — visi automatiškai atsinaujina po kiekvieno laimėjimo ar pralaimėjimo.
+
+### Pilnas srautas
+
+Paimkime pavyzdį: žaidėjas laimi ruletėje.
+
+1. **UI** — žaidėjas pasirenka „Raudona" ir paspaudžia SPIN
+2. **Logikos sluoksnis** — `Roulette.gd` apskaičiuoja rezultatą ir iškviečia `BalanceManager.add_balance(winnings)`
+3. **Duomenų sluoksnis** — `BalanceManager` atnaujina `balance` ir skleidžia `balance_changed` signalą
+4. **UI** — `Roulette.gd` ir `MainMenu.gd` automatiškai gauna signalą ir atnaujina ekrane rodomą skaičių
+
+```
+Žaidėjas spauda SPIN
+       ↓
+Roulette.gd → BalanceManager.add_balance(winnings)
+                      ↓
+             balance_changed signalas
+                      ↓
+      ┌───────────────┴───────────────┐
+ Roulette UI                    MainMenu UI
+ atsinaujina                   atsinaujina
+```
 
 ---
 
@@ -161,18 +201,10 @@ Padalinta iš `deck_sheet_fixed.png` (4823×2096 px, 371×524 px per kortą).
 deadline-dealers/
 ├── project.godot
 ├── Assets/
-│   ├── Audio/
-│   │   ├── main_menu_bgm.ogg
-│   │   ├── card_deal.ogg
-│   │   ├── blackjack_win.ogg
-│   │   ├── blackjack_lose.ogg
-│   │   ├── roulette_spin.ogg
-│   │   ├── roulette_win.ogg
-│   │   └── roulette_lose.ogg
+│   ├── Audio/                   # .ogg garso failai
 │   └── Images/
-│       ├── Cards/               # 52x card_{suit}_{value}.png + card_back.png
-│       ├── MainMenu/
-│       └── GAMBA_LYNGG.png
+│       ├── Cards/               # card_{suit}_{value}.png + card_back.png
+│       └── MainMenu/
 ├── Scenes/
 │   ├── Splash/
 │   ├── MainMenu/
@@ -204,14 +236,6 @@ deadline-dealers/
     ├── StatsManager.gd
     └── AudioManager.gd
 ```
-
----
-
-## Garso failai
-
-`AudioManager` automatiškai aptinka `.ogg` failus `Assets/Audio/`. Jei failų nėra — žaidimas veikia be garso (klaidos nekyla).
-
-Rekomenduojami nemokamų garsų šaltiniai: [freesound.org](https://freesound.org), [opengameart.org](https://opengameart.org)
 
 ---
 

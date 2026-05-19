@@ -242,6 +242,7 @@ func _on_spin_button_pressed() -> void:
 		return
 	if spin_button:
 		spin_button.disabled = true
+	AudioManager.play_sfx("roulette_spin")
 	await _animate_wheel_spin()
 	spin()
 

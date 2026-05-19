@@ -302,8 +302,10 @@ func deal_initial_player_cards() -> void:
 	var c2 := deal_card()
 	player_hand.append(c1)
 	player_hand.append(c2)
+	AudioManager.play_sfx("card_deal")
 	_deal_card_to(_player_container, _player_cards, c1)
 	await get_tree().create_timer(0.2).timeout
+	AudioManager.play_sfx("card_deal")
 	_deal_card_to(_player_container, _player_cards, c2)
 	update_player_score()
 
@@ -314,8 +316,10 @@ func deal_initial_dealer_cards() -> void:
 	dealer_hand.append(c1)
 	dealer_hand.append(c2)
 	dealer_card_hidden = true
+	AudioManager.play_sfx("card_deal")
 	_deal_card_to(_dealer_container, _dealer_cards, c1, false)
 	await get_tree().create_timer(0.2).timeout
+	AudioManager.play_sfx("card_deal")
 	_deal_card_to(_dealer_container, _dealer_cards, c2, true)
 	update_dealer_score()
 
@@ -392,6 +396,7 @@ func hit() -> void:
 	if _double_down_button: _double_down_button.visible = false
 	var card := deal_card()
 	player_hand.append(card)
+	AudioManager.play_sfx("card_deal")
 	_deal_card_to(_player_container, _player_cards, card)
 	update_player_score()
 	if calculate_score(player_hand) > 21:

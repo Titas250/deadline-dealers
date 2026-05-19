@@ -1,15 +1,16 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1779205775
+::res://::1779206015
 icon.svg::CompressedTexture2D::2640024836966822902::1773685335::1776768826::1::::<><><>0<>0<>e4dc3eccf5eb90b1b00ad537b8b8c352<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
 README.md::TextFile::-1::1779204941::0::1::::<><><>0<>0<><>::
 ::res://Assets/::1779202321
-::res://Assets/Audio/::1779205900
+::res://Assets/Audio/::1779205960
 blackjack_lose.ogg::AudioStreamOggVorbis::7765171546143097141::1779205457::1779205561::1::::<><><>0<>0<>e4a52a8fc712975b5c4470f3fa2e2c95<>res://.godot/imported/blackjack_lose.ogg-b41a1dd10c6661726c6656521f5068db.oggvorbisstr::
 blackjack_win.ogg::AudioStreamOggVorbis::8779817149011854043::1779204657::1779204774::1::::<><><>0<>0<>e17d079d990cb188530d4227814ca913<>res://.godot/imported/blackjack_win.ogg-94760a4cedcbb0f501f4852ae7a6b5b8.oggvorbisstr::
 card_deal.ogg::AudioStreamOggVorbis::8695240182704068267::1779205878::1779205904::1::::<><><>0<>0<>a57f6da79031439b6b8987c51ab63439<>res://.godot/imported/card_deal.ogg-8bb97a416fb48a6d18cc24701aace8e7.oggvorbisstr::
 main_menu_bgm.ogg::AudioStreamOggVorbis::8340157078239256992::1779202427::1779202587::1::::<><><>0<>0<>11cf9397f2221d1cb8e4fdbf2a3dfd00<>res://.godot/imported/main_menu_bgm.ogg-5f2cb4a8cf8e2e28d3c5a32b75a11951.oggvorbisstr::
-roulette _win.ogg::AudioStreamOggVorbis::655537568432191676::1779204654::1779204774::1::::<><><>0<>0<>63c8500509909a20332fbd800ca4ca52<>res://.godot/imported/roulette _win.ogg-627881929a763bd115d106a15735e6ce.oggvorbisstr::
 roulette_lose.ogg::AudioStreamOggVorbis::221497342768499062::1779205457::1779205561::1::::<><><>0<>0<>97beb7bea8dcbc9a80f76be604b3bb3c<>res://.godot/imported/roulette_lose.ogg-99596a033a15ab28e72cf81e5fc9e58d.oggvorbisstr::
+roulette_spin.ogg::AudioStreamOggVorbis::3448951696215624277::1779205942::1779206016::1::::<><><>0<>0<>59734a6ec564152cda8bf99c4158df67<>res://.godot/imported/roulette_spin.ogg-89a30c806065df6cbad0898fe1bedcd6.oggvorbisstr::
+roulette_win.ogg::AudioStreamOggVorbis::655537568432191676::1779204654::1779206016::1::::<><><>0<>0<>cd28b9488b6cdd59599e29fe98b0f34a<>res://.godot/imported/roulette_win.ogg-938ccec6ca937aa447aeaef3fc7290ab.oggvorbisstr::
 ::res://Assets/Images/::1776851872
 deck_sheet_fixed.png::CompressedTexture2D::6239234996378561850::1776799587::1776851872::1::::<><><>0<>0<>758a0f3cda5c774d6b630b4089029643<>res://.godot/imported/deck_sheet_fixed.png-bb7fdeae2eb5e2d7f546c213c7fae484.ctex::
 GAMBA_LYNGG.png::CompressedTexture2D::4872023362951532787::1776799587::1776851871::1::::<><><>0<>0<>1479f0ac88349aafce20b80c620ad0f3<>res://.godot/imported/GAMBA_LYNGG.png-1ed97d956c329379d847bc9b4b22c08c.ctex::

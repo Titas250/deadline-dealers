@@ -1,9 +1,5 @@
 extends PanelContainer
 
-# SCRUM-278: Vizualūs kortų komponentai su ranku darbo PNG kortomis
-# Naudojimas Blackjack.gd:
-#   card.setup(value, suit, hidden)   # suit ignoruojamas (PNG be suitų)
-
 var card_value: int = 0
 var suit_index: int = 0
 var is_hidden: bool = false
@@ -52,4 +48,4 @@ func _update_display() -> void:
 		_texture_rect.texture = load("res://Assets/Images/Cards/card_back.png")
 	else:
 		_style.bg_color = Color.WHITE
-		_texture_rect.texture = load("res://Assets/Images/Cards/card_" + str(card_value) + ".png")
+		_texture_rect.texture = load("res://Assets/Images/Cards/card_" + str(suit_index) + "_" + str(card_value) + ".png")

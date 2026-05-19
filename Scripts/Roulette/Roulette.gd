@@ -1,10 +1,5 @@
 extends Control
 
-# SCRUM-283: Vizualus ruletės rato komponentas
-# SCRUM-284: Rato sukimosi animacija
-# SCRUM-285: Statymų skaičių lentelė (grid)
-# SCRUM-286: Animuotas rezultato rodymas
-# SCRUM-293
 @onready var balance_label: Label = $BalanceLabel
 @onready var spin_button: Button = $SpinButton
 @onready var result_label: Label = $ResultLabel
@@ -23,11 +18,13 @@ var chosen_number: int = -1
 var current_bet: int = 0
 var red_numbers: Array = [1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36]
 var black_numbers: Array = [2,4,6,8,10,11,13,15,17,20,22,24,26,28,29,31,33,35]
+var spin_history: Array = []
 
-# Vizualiniai elementai
 var _wheel_image: TextureRect
 var _number_grid: GridContainer
 var _selected_number_btn: Button = null
+var _spin_history_label: Label
+var _dozen_buttons: Array = []
 
 func _ready() -> void:
 	update_balance_display()
@@ -38,13 +35,13 @@ func _ready() -> void:
 
 	_setup_wheel()
 	_setup_number_grid()
+	_setup_dozen_buttons()
+	_setup_spin_history_label()
 
-	# Paslėpk seną number input
 	if number_bet_input: number_bet_input.visible = false
 	if confirm_number_button: confirm_number_button.visible = false
 	if has_node("NumberBetLabel"): $NumberBetLabel.visible = false
 
-	# Signalai
 	if bet_red_button and not bet_red_button.pressed.is_connected(_on_bet_red_button_pressed):
 		bet_red_button.pressed.connect(_on_bet_red_button_pressed)
 	if bet_black_button and not bet_black_button.pressed.is_connected(_on_bet_black_button_pressed):
@@ -58,21 +55,93 @@ func _ready() -> void:
 		if not new_round_button.pressed.is_connected(_on_new_round_pressed):
 			new_round_button.pressed.connect(_on_new_round_pressed)
 
-# ── Ruletės ratas ───────────────────────────────────────────────────────
+# ── Spin istorija ──────────────────────────────────────────────────────────
+
+func _setup_spin_history_label() -> void:
+	_spin_history_label = Label.new()
+	_spin_history_label.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	_spin_history_label.offset_left = 20.0
+	_spin_history_label.offset_top = 80.0
+	_spin_history_label.offset_right = 290.0
+	_spin_history_label.offset_bottom = 230.0
+	_spin_history_label.add_theme_font_size_override("font_size", 15)
+	_spin_history_label.add_theme_color_override("font_color", Color(0.88, 0.88, 0.88))
+	_spin_history_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_spin_history_label.text = "Paskutiniai sukimai:\n—"
+	add_child(_spin_history_label)
+
+func _update_spin_history(num: int) -> void:
+	var color_str := get_number_color(num)
+	var entry: String
+	match color_str:
+		"RED":   entry = str(num) + " 🔴"
+		"BLACK": entry = str(num) + " ⚫"
+		_:       entry = str(num) + " 🟢"
+	spin_history.push_front(entry)
+	if spin_history.size() > 5:
+		spin_history.resize(5)
+	var text := "Paskutiniai sukimai:\n"
+	for e in spin_history:
+		text += e + "\n"
+	if _spin_history_label:
+		_spin_history_label.text = text.strip_edges()
+
+# ── Dozen lažybų mygtukai ─────────────────────────────────────────────────
+
+func _setup_dozen_buttons() -> void:
+	var dozen_container := HBoxContainer.new()
+	dozen_container.add_theme_constant_override("separation", 8)
+	dozen_container.set_anchors_and_offsets_preset(Control.PRESET_TOP_LEFT)
+	dozen_container.offset_left = 97.0
+	dozen_container.offset_top = 355.0
+	dozen_container.offset_right = 440.0
+	dozen_container.offset_bottom = 413.0
+	add_child(dozen_container)
+
+	var dozens := [
+		["1–12", "dozen1", Color(0.15, 0.15, 0.55)],
+		["13–24", "dozen2", Color(0.15, 0.35, 0.15)],
+		["25–36", "dozen3", Color(0.45, 0.15, 0.45)],
+	]
+	for d in dozens:
+		var btn := Button.new()
+		btn.text = d[0] + "\n(x3)"
+		btn.custom_minimum_size = Vector2(110, 55)
+		btn.add_theme_font_size_override("font_size", 14)
+		btn.add_theme_color_override("font_color", Color.WHITE)
+		var style := StyleBoxFlat.new()
+		style.bg_color = d[2]
+		style.corner_radius_top_left = 6
+		style.corner_radius_top_right = 6
+		style.corner_radius_bottom_left = 6
+		style.corner_radius_bottom_right = 6
+		btn.add_theme_stylebox_override("normal", style)
+		var style_hover := style.duplicate() as StyleBoxFlat
+		style_hover.bg_color = (d[2] as Color).lightened(0.3)
+		btn.add_theme_stylebox_override("hover", style_hover)
+		var dtype: String = d[1]
+		btn.pressed.connect(func(): _on_dozen_pressed(dtype, btn))
+		dozen_container.add_child(btn)
+		_dozen_buttons.append(btn)
+
+func _on_dozen_pressed(dtype: String, btn: Button) -> void:
+	for b in _dozen_buttons:
+		b.modulate = Color.WHITE
+	btn.modulate = Color(1.5, 1.5, 0.5)
+	set_bet_type(dtype)
+
+# ── Ruletės ratas ──────────────────────────────────────────────────────────
 
 func _setup_wheel() -> void:
 	var wheel_tex := load("res://Assets/Images/roulette_table.png")
 	if not wheel_tex:
 		return
-
 	_wheel_image = TextureRect.new()
 	_wheel_image.texture = wheel_tex
 	_wheel_image.expand_mode = TextureRect.EXPAND_FIT_WIDTH_PROPORTIONAL
 	_wheel_image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	_wheel_image.custom_minimum_size = Vector2(220, 220)
 	_wheel_image.pivot_offset = Vector2(110, 110)
-
-	# Pozicionuok viršuje dešinėje
 	_wheel_image.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
 	_wheel_image.offset_left = -260.0
 	_wheel_image.offset_right = -30.0
@@ -98,8 +167,6 @@ func _setup_number_grid() -> void:
 	_number_grid.columns = 6
 	_number_grid.add_theme_constant_override("h_separation", 4)
 	_number_grid.add_theme_constant_override("v_separation", 4)
-
-	# Pozicionuok apačioje dešinėje (po ruletės ratu, netrukdo esamiems mygtukams)
 	_number_grid.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_RIGHT)
 	_number_grid.offset_left = -370.0
 	_number_grid.offset_right = -20.0
@@ -107,16 +174,12 @@ func _setup_number_grid() -> void:
 	_number_grid.offset_bottom = -20.0
 	add_child(_number_grid)
 
-	# 0 mygtukas (žalias)
 	var zero_btn := _make_number_button(0, Color(0.1, 0.55, 0.1))
 	_number_grid.add_child(zero_btn)
-
-	# 1–36
 	for n in range(1, 37):
 		var is_red := n in red_numbers
 		var col := Color(0.7, 0.1, 0.1) if is_red else Color(0.12, 0.12, 0.12)
-		var btn := _make_number_button(n, col)
-		_number_grid.add_child(btn)
+		_number_grid.add_child(_make_number_button(n, col))
 
 func _make_number_button(n: int, bg_color: Color) -> Button:
 	var btn := Button.new()
@@ -124,7 +187,6 @@ func _make_number_button(n: int, bg_color: Color) -> Button:
 	btn.custom_minimum_size = Vector2(52, 38)
 	btn.add_theme_font_size_override("font_size", 14)
 	btn.add_theme_color_override("font_color", Color.WHITE)
-
 	var style := StyleBoxFlat.new()
 	style.bg_color = bg_color
 	style.corner_radius_top_left = 4
@@ -132,21 +194,17 @@ func _make_number_button(n: int, bg_color: Color) -> Button:
 	style.corner_radius_bottom_left = 4
 	style.corner_radius_bottom_right = 4
 	btn.add_theme_stylebox_override("normal", style)
-
 	var style_hover := style.duplicate() as StyleBoxFlat
 	style_hover.bg_color = bg_color.lightened(0.25)
 	btn.add_theme_stylebox_override("hover", style_hover)
-
 	btn.pressed.connect(_on_number_grid_pressed.bind(n, btn))
 	return btn
 
 func _on_number_grid_pressed(n: int, btn: Button) -> void:
-	# Deselect previouus
 	if _selected_number_btn:
 		_selected_number_btn.modulate = Color.WHITE
 	_selected_number_btn = btn
 	btn.modulate = Color(1.0, 1.0, 0.3)
-
 	if number_bet_input:
 		number_bet_input.value = n
 	_on_confirm_number_bet_pressed()
@@ -167,12 +225,10 @@ func _show_winning_number_animated(num: int) -> void:
 		"GREEN":
 			winning_number_label.text = "🟢 0 GREEN"
 			winning_number_label.add_theme_color_override("font_color", Color.LIME_GREEN)
-
 	winning_number_label.pivot_offset = winning_number_label.size / 2.0
 	winning_number_label.scale = Vector2(0.3, 0.3)
 	winning_number_label.modulate.a = 0.0
 	winning_number_label.visible = true
-
 	var tween := create_tween().set_parallel(true)
 	tween.tween_property(winning_number_label, "scale", Vector2(1.0, 1.0), 0.4)\
 		.set_ease(Tween.EASE_OUT).set_trans(Tween.TRANS_BACK)
@@ -182,7 +238,7 @@ func _show_winning_number_animated(num: int) -> void:
 
 func _on_spin_button_pressed() -> void:
 	if bet_type == "":
-		show_message("Please place a bet first!")
+		show_message("Pirmiausia pasirink lažybas!")
 		return
 	if spin_button:
 		spin_button.disabled = true
@@ -192,12 +248,12 @@ func _on_spin_button_pressed() -> void:
 func spin() -> void:
 	winning_number = randi_range(0, 36)
 	_show_winning_number_animated(winning_number)
+	_update_spin_history(winning_number)
 	check_result()
 
 func check_result() -> void:
 	var won: bool = false
 	var payout_multiplier: int = 0
-
 	match bet_type:
 		"red":
 			if winning_number in red_numbers:
@@ -211,39 +267,46 @@ func check_result() -> void:
 			if winning_number == chosen_number:
 				won = true
 				payout_multiplier = 36
-
+		"dozen1":
+			if winning_number >= 1 and winning_number <= 12:
+				won = true
+				payout_multiplier = 3
+		"dozen2":
+			if winning_number >= 13 and winning_number <= 24:
+				won = true
+				payout_multiplier = 3
+		"dozen3":
+			if winning_number >= 25 and winning_number <= 36:
+				won = true
+				payout_multiplier = 3
 	if won:
 		handle_win(payout_multiplier)
 	else:
 		handle_loss()
 
 func handle_loss() -> void:
-	show_message("You lose. Try again!")
+	show_message("Pralaimėjai. Bandyk dar kartą!")
+	StatsManager.record_result(false, 0)
 	if spin_button: spin_button.disabled = true
 	if new_round_button: new_round_button.visible = true
+	_check_game_over()
 
 func handle_win(multiplier: int) -> void:
 	var winnings := current_bet * multiplier
 	BalanceManager.add_balance(winnings)
+	StatsManager.record_result(true, winnings - current_bet)
 	if multiplier == 36:
-		show_message("🎰 JACKPOT! You win $" + str(winnings) + "! 🎰")
+		show_message("🎰 JACKPOT! Laimėjai $" + str(winnings) + "! 🎰")
 	else:
-		show_message("Correct! You win $" + str(winnings) + "!")
+		show_message("Teisingai! Laimėjai $" + str(winnings) + "!")
 	update_balance_display()
 	if spin_button: spin_button.disabled = true
 	if new_round_button: new_round_button.visible = true
 
-func reset_round() -> void:
-	bet_type = ""
-	chosen_number = -1
-	current_bet = 0
-	if _selected_number_btn:
-		_selected_number_btn.modulate = Color.WHITE
-		_selected_number_btn = null
-	if spin_button: spin_button.disabled = false
-	highlight_active_bet()
-	if bet_amount_spinbox:
-		bet_amount_spinbox.max_value = BalanceManager.get_balance()
+func _check_game_over() -> void:
+	if BalanceManager.get_balance() == 0:
+		await get_tree().create_timer(1.8).timeout
+		get_tree().change_scene_to_file("res://Scenes/GameOver/GameOver.tscn")
 
 func _on_confirm_number_bet_pressed() -> void:
 	if number_bet_input:
@@ -276,7 +339,7 @@ func set_bet_type(type: String) -> void:
 	if bet_amount_spinbox:
 		var bet_amount := int(bet_amount_spinbox.value)
 		if bet_amount > BalanceManager.get_balance():
-			show_message("Insufficient balance!")
+			show_message("Nepakanka lėšų!")
 			return
 		if current_bet == 0:
 			BalanceManager.subtract_balance(bet_amount)
@@ -312,6 +375,8 @@ func _on_new_round_pressed() -> void:
 	if result_label: result_label.visible = false
 	if winning_number_label: winning_number_label.visible = false
 	if spin_button: spin_button.disabled = false
+	for b in _dozen_buttons:
+		b.modulate = Color.WHITE
 	highlight_active_bet()
 	if bet_amount_spinbox:
 		bet_amount_spinbox.max_value = BalanceManager.get_balance()

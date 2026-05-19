@@ -1,10 +1,5 @@
 extends Control
 
-# SCRUM-279: Kortų dalinimo slide-in animacijos
-# SCRUM-280: Dealerio kortos apvertimo animacija
-# SCRUM-282: Laimėjimo/pralaimėjimo animuotas overlay
-# Reikalauja: Scripts/Blackjack/Card.gd (Titas)
-
 const CardScript = preload("res://Scripts/Blackjack/Card.gd")
 
 var deck: Array = []
@@ -12,16 +7,15 @@ var player_hand: Array = []
 var dealer_hand: Array = []
 var dealer_card_hidden: bool = true
 var current_bet: int = 0
+var _can_double_down: bool = false
 
-# Vizualiniai kortų konteineriai
 var _dealer_container: HBoxContainer
 var _player_container: HBoxContainer
 var _dealer_cards: Array = []
 var _player_cards: Array = []
-
-# Win/loss overlay
 var _result_overlay: PanelContainer
 var _overlay_label: Label
+var _double_down_button: Button
 
 @onready var balance_label: Label = $BalanceLabel
 @onready var back_button: Button = $BackButton
@@ -38,6 +32,7 @@ var _overlay_label: Label
 func _ready() -> void:
 	_setup_card_containers()
 	_setup_result_overlay()
+	_setup_double_down_button()
 	update_balance_display()
 	if BalanceManager:
 		BalanceManager.balance_changed.connect(_on_balance_changed)
@@ -67,6 +62,56 @@ func _ready() -> void:
 		play_again_button.visible = false
 		if not play_again_button.pressed.is_connected(_on_play_again_pressed):
 			play_again_button.pressed.connect(_on_play_again_pressed)
+
+# ── Double Down ────────────────────────────────────────────────────────────
+
+func _setup_double_down_button() -> void:
+	_double_down_button = Button.new()
+	_double_down_button.text = "⬇ Double Down"
+	_double_down_button.custom_minimum_size = Vector2(180, 50)
+	_double_down_button.add_theme_font_size_override("font_size", 18)
+	_double_down_button.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
+	_double_down_button.offset_left = -90.0
+	_double_down_button.offset_right = 90.0
+	_double_down_button.offset_top = -210.0
+	_double_down_button.offset_bottom = -160.0
+	_double_down_button.visible = false
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(0.6, 0.4, 0.0)
+	style.corner_radius_top_left = 6
+	style.corner_radius_top_right = 6
+	style.corner_radius_bottom_left = 6
+	style.corner_radius_bottom_right = 6
+	_double_down_button.add_theme_stylebox_override("normal", style)
+	var style_h := style.duplicate() as StyleBoxFlat
+	style_h.bg_color = Color(0.8, 0.55, 0.0)
+	_double_down_button.add_theme_stylebox_override("hover", style_h)
+	_double_down_button.pressed.connect(_on_double_down_pressed)
+	add_child(_double_down_button)
+
+func _on_double_down_pressed() -> void:
+	double_down()
+
+func double_down() -> void:
+	if not BalanceManager.can_afford(current_bet):
+		show_result("Nepakanka lėšų double down!")
+		return
+	BalanceManager.subtract_balance(current_bet)
+	current_bet *= 2
+	_double_down_button.visible = false
+	_can_double_down = false
+	if hit_button: hit_button.disabled = true
+	if stand_button: stand_button.disabled = true
+	var card := deal_card()
+	player_hand.append(card)
+	_deal_card_to(_player_container, _player_cards, card)
+	await get_tree().create_timer(0.3).timeout
+	update_player_score()
+	if calculate_score(player_hand) > 21:
+		end_round(false)
+	else:
+		await get_tree().create_timer(0.2).timeout
+		stand()
 
 # ── Kortų konteinerių kūrimas ──────────────────────────────────────────────
 
@@ -129,7 +174,6 @@ func _deal_card_to(container: HBoxContainer, cards_arr: Array, value: int, hidde
 	container.add_child(card)
 	card.setup(value, randi() % 4, hidden)
 	cards_arr.append(card)
-
 	var tween := create_tween()
 	tween.tween_property(card, "modulate:a", 1.0, 0.25)
 
@@ -149,19 +193,15 @@ func _show_result_animated(message: String, win: bool) -> void:
 	if result_label:
 		result_label.text = message
 		result_label.visible = true
-
 	if not _result_overlay or not _overlay_label:
 		return
-
 	_overlay_label.text = message
 	var col := Color(0.2, 0.9, 0.3) if win else Color(0.9, 0.2, 0.2)
 	_overlay_label.add_theme_color_override("font_color", col)
-
 	_result_overlay.modulate.a = 0.0
 	_result_overlay.scale = Vector2(0.6, 0.6)
 	_result_overlay.pivot_offset = _result_overlay.size / 2.0
 	_result_overlay.visible = true
-
 	var tween := create_tween().set_parallel(true)
 	tween.tween_property(_result_overlay, "modulate:a", 1.0, 0.3)
 	tween.tween_property(_result_overlay, "scale", Vector2(1.0, 1.0), 0.35)\
@@ -181,19 +221,16 @@ func _flip_dealer_hidden_card() -> void:
 	var hidden_card: PanelContainer = _dealer_cards[1] if _dealer_cards.size() > 1 else _dealer_cards[0]
 	var center_x := hidden_card.size.x / 2.0
 	hidden_card.pivot_offset = Vector2(center_x, hidden_card.size.y / 2.0)
-
 	var tween1 := create_tween()
 	tween1.tween_property(hidden_card, "scale:x", 0.0, 0.15).set_ease(Tween.EASE_IN)
 	await tween1.finished
-
 	if hidden_card and is_instance_valid(hidden_card):
 		hidden_card.call("reveal")
-
 	var tween2 := create_tween()
 	tween2.tween_property(hidden_card, "scale:x", 1.0, 0.15).set_ease(Tween.EASE_OUT)
 	await tween2.finished
 
-# ── Žaidimo logika (originali + animacijos) ────────────────────────────────
+# ── Žaidimo logika ─────────────────────────────────────────────────────────
 
 func update_balance_display() -> void:
 	if balance_label and BalanceManager:
@@ -319,6 +356,9 @@ func place_bet() -> void:
 	if hit_button: hit_button.disabled = false
 	if stand_button: stand_button.disabled = false
 	await start_round()
+	_can_double_down = true
+	if _double_down_button and BalanceManager.can_afford(current_bet):
+		_double_down_button.visible = true
 
 func _on_place_bet_button_pressed() -> void:
 	place_bet()
@@ -348,6 +388,8 @@ func hide_bet_error() -> void:
 		bet_error_label.visible = false
 
 func hit() -> void:
+	_can_double_down = false
+	if _double_down_button: _double_down_button.visible = false
 	var card := deal_card()
 	player_hand.append(card)
 	_deal_card_to(_player_container, _player_cards, card)
@@ -363,20 +405,30 @@ func show_result(message: String) -> void:
 func end_round(player_wins: bool) -> void:
 	if hit_button: hit_button.disabled = true
 	if stand_button: stand_button.disabled = true
+	if _double_down_button: _double_down_button.visible = false
+
+	var is_push := result_label != null and "PUSH" in result_label.text.to_upper()
 
 	if player_wins:
 		var winnings := current_bet * 2
 		BalanceManager.add_funds(winnings)
 		_show_result_animated("You Win! +$" + str(winnings), true)
-	elif result_label and "PUSH" in result_label.text.to_upper():
+		StatsManager.record_result(true, winnings - current_bet)
+	elif is_push:
 		BalanceManager.add_funds(current_bet)
 		_show_result_animated("Push! Bet returned", false)
 	else:
 		_show_result_animated("You Lose!", false)
+		StatsManager.record_result(false, 0)
 
 	update_balance_display()
-	if has_node("PlayAgainButton"):
-		$PlayAgainButton.visible = true
+	if play_again_button: play_again_button.visible = true
+	_check_game_over()
+
+func _check_game_over() -> void:
+	if BalanceManager.get_balance() == 0:
+		await get_tree().create_timer(1.8).timeout
+		get_tree().change_scene_to_file("res://Scenes/GameOver/GameOver.tscn")
 
 func reset_for_new_round() -> void:
 	_hide_result_overlay()
@@ -384,6 +436,8 @@ func reset_for_new_round() -> void:
 	player_hand.clear()
 	dealer_hand.clear()
 	dealer_card_hidden = true
+	_can_double_down = false
+	if _double_down_button: _double_down_button.visible = false
 	if player_score_label: player_score_label.text = "Your Score: 0"
 	if dealer_score_label: dealer_score_label.text = "Dealer: ?"
 
@@ -393,6 +447,7 @@ func _on_hit_button_pressed() -> void:
 func stand() -> void:
 	if hit_button: hit_button.disabled = true
 	if stand_button: stand_button.disabled = true
+	if _double_down_button: _double_down_button.visible = false
 	dealer_draw()
 
 func _on_stand_button_pressed() -> void:

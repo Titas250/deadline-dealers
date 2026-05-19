@@ -1,0 +1,73 @@
+[gd_scene format=3 uid="uid://cgameover001"]
+
+[ext_resource type="Script" path="res://Scripts/GameOver/GameOver.gd" id="1_go"]
+
+[node name="GameOver" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_go")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.06, 0.02, 0.02, 1)
+
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -200.0
+offset_right = 300.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="TitleLabel" type="Label" parent="Panel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 52
+theme_override_colors/font_color = Color(0.95, 0.15, 0.15, 1)
+text = "BANKROTAS!"
+horizontal_alignment = 1
+
+[node name="SubLabel" type="Label" parent="Panel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+text = "Likutis: $0"
+horizontal_alignment = 1
+
+[node name="ButtonsHBox" type="HBoxContainer" parent="Panel/VBox"]
+layout_mode = 2
+alignment = 1
+theme_override_constants/separation = 20
+
+[node name="RetryButton" type="Button" parent="Panel/VBox/ButtonsHBox"]
+custom_minimum_size = Vector2(200, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Bandyti Vėl ($1000)"
+
+[node name="MenuButton" type="Button" parent="Panel/VBox/ButtonsHBox"]
+custom_minimum_size = Vector2(200, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "← Grįžti į Meniu"
+
+[connection signal="pressed" from="Panel/VBox/ButtonsHBox/RetryButton" to="." method="_on_retry_pressed"]
+[connection signal="pressed" from="Panel/VBox/ButtonsHBox/MenuButton" to="." method="_on_menu_pressed"]

@@ -1,0 +1,117 @@
+[gd_scene format=3 uid="uid://cstats_scn001"]
+
+[ext_resource type="Script" path="res://Scripts/Stats/Stats.gd" id="1_stats"]
+
+[node name="Stats" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_stats")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.05, 0.05, 0.08, 1)
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -250.0
+offset_top = 40.0
+offset_right = 250.0
+offset_bottom = 110.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 52
+theme_override_colors/font_color = Color(1.0, 0.85, 0.2, 1)
+text = "STATISTIKOS"
+horizontal_alignment = 1
+
+[node name="StatsContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -130.0
+offset_right = 280.0
+offset_bottom = 130.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 24
+
+[node name="GamesPlayedLabel" type="Label" parent="StatsContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+text = "Žaidimai: 0"
+horizontal_alignment = 1
+
+[node name="WinsLabel" type="Label" parent="StatsContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+theme_override_colors/font_color = Color(0.2, 0.9, 0.3, 1)
+text = "Laimėjimai: 0"
+horizontal_alignment = 1
+
+[node name="LossesLabel" type="Label" parent="StatsContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+theme_override_colors/font_color = Color(0.9, 0.2, 0.2, 1)
+text = "Pralaimėjimai: 0"
+horizontal_alignment = 1
+
+[node name="BiggestWinLabel" type="Label" parent="StatsContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+theme_override_colors/font_color = Color(1.0, 0.85, 0.2, 1)
+text = "Didžiausias laimėjimas: $0"
+horizontal_alignment = 1
+
+[node name="WinRateLabel" type="Label" parent="StatsContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.65, 0.65, 0.65, 1)
+text = "Laimėjimų rodiklis: 0.0%"
+horizontal_alignment = 1
+
+[node name="ButtonsContainer" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -220.0
+offset_top = -90.0
+offset_right = 220.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 0
+alignment = 1
+theme_override_constants/separation = 24
+
+[node name="BackButton" type="Button" parent="ButtonsContainer"]
+custom_minimum_size = Vector2(170, 55)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "← Atgal"
+
+[node name="ResetButton" type="Button" parent="ButtonsContainer"]
+custom_minimum_size = Vector2(170, 55)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Ištrinti"
+
+[connection signal="pressed" from="ButtonsContainer/BackButton" to="." method="_on_back_button_pressed"]
+[connection signal="pressed" from="ButtonsContainer/ResetButton" to="." method="_on_reset_pressed"]

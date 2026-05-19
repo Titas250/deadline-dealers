@@ -8,6 +8,7 @@ extends Control
 @onready var title_label: Label = $Title
 @onready var game_buttons: HBoxContainer = $GameButtonsContainer
 @onready var background: ColorRect = $Background
+@onready var bgm_player: AudioStreamPlayer = $BGMPlayer
 
 var _balance_label: Label
 
@@ -18,6 +19,9 @@ func _ready() -> void:
 	_animate_buttons()
 	if BalanceManager:
 		BalanceManager.balance_changed.connect(_on_balance_changed)
+
+func _on_bgm_finished() -> void:
+	bgm_player.play()
 
 func _style_background() -> void:
 	if not background:
@@ -85,3 +89,6 @@ func _on_game_two_pressed() -> void:
 
 func _on_settings_pressed() -> void:
 	pass
+
+func _on_stats_pressed() -> void:
+	SceneTransition.change_scene("res://Scenes/Stats/Stats.tscn")

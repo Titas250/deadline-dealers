@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://bofbfpkhbw4hk" path="res://Assets/Images/MainMenu/pickurpoison-removebg-preview.png" id="2_6k1ba"]
 [ext_resource type="Texture2D" uid="uid://b36rgyirqdo6j" path="res://Assets/Images/MainMenu/roullete.png" id="3_6k1ba"]
 [ext_resource type="Texture2D" uid="uid://xocxuiuxgjxl" path="res://Assets/Images/MainMenu/gear-removebg-preview.png" id="4_21vr6"]
+[ext_resource type="AudioStream" path="res://Assets/Audio/main_menu_bgm.ogg" id="5_bgm"]
 
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_kpx3y"]
 load_path = "res://.godot/imported/blekasjekas.png-9a09855c2307761d2f620033676a2b3f.ctex"
@@ -96,6 +97,26 @@ icon = ExtResource("4_21vr6")
 flat = true
 expand_icon = true
 
+[node name="StatsButton" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = -70.0
+offset_right = 200.0
+offset_bottom = -20.0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 18
+text = "📊 Statistikos"
+
+[node name="BGMPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_bgm")
+volume_db = -10.0
+autoplay = true
+
 [connection signal="pressed" from="GameButtonsContainer/Black Jack" to="." method="_on_game_one_pressed"]
 [connection signal="pressed" from="GameButtonsContainer/Roullete" to="." method="_on_game_two_pressed"]
 [connection signal="pressed" from="SettingsButton" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="StatsButton" to="." method="_on_stats_pressed"]
+[connection signal="finished" from="BGMPlayer" to="." method="_on_bgm_finished"]

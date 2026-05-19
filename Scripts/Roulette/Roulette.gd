@@ -286,6 +286,7 @@ func check_result() -> void:
 
 func handle_loss() -> void:
 	show_message("Pralaimėjai. Bandyk dar kartą!")
+	AudioManager.play_sfx("roulette_lose")
 	StatsManager.record_result(false, 0)
 	if spin_button: spin_button.disabled = true
 	if new_round_button: new_round_button.visible = true
@@ -294,6 +295,7 @@ func handle_loss() -> void:
 func handle_win(multiplier: int) -> void:
 	var winnings := current_bet * multiplier
 	BalanceManager.add_balance(winnings)
+	AudioManager.play_sfx("roulette_win")
 	StatsManager.record_result(true, winnings - current_bet)
 	if multiplier == 36:
 		show_message("🎰 JACKPOT! Laimėjai $" + str(winnings) + "! 🎰")

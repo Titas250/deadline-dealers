@@ -413,12 +413,14 @@ func end_round(player_wins: bool) -> void:
 		var winnings := current_bet * 2
 		BalanceManager.add_funds(winnings)
 		_show_result_animated("You Win! +$" + str(winnings), true)
+		AudioManager.play_sfx("bj_win")
 		StatsManager.record_result(true, winnings - current_bet)
 	elif is_push:
 		BalanceManager.add_funds(current_bet)
 		_show_result_animated("Push! Bet returned", false)
 	else:
 		_show_result_animated("You Lose!", false)
+		AudioManager.play_sfx("bj_lose")
 		StatsManager.record_result(false, 0)
 
 	update_balance_display()

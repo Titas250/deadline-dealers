@@ -1,5 +1,6 @@
 63f7b34db8d8cdea90c76aacccf841ec
-::res://::1779206228
+::res://::1779210911
+export_presets.cfg::TextFile::-1::1779206552::0::1::::<><><>0<>0<><>::
 icon.svg::CompressedTexture2D::2640024836966822902::1773685335::1776768826::1::::<><><>0<>0<>e4dc3eccf5eb90b1b00ad537b8b8c352<>res://.godot/imported/icon.svg-218a8f2b3041327d8a5756f3a245f83b.ctex::
 README.md::TextFile::-1::1779204941::0::1::::<><><>0<>0<><>::
 ::res://Assets/::1779202321
@@ -109,8 +110,8 @@ BalanceManager.gd::GDScript::9216080507494140292::1778748159::0::1::::<>Node<><>
 StatsManager.gd::GDScript::6334197246107143109::1779203409::0::1::::<>Node<><>0<>0<><>::
 ::res://Scripts/Autoload/::1777900884
 SceneTransition.gd::GDScript::3527034518976190232::1777899944::0::1::::<>CanvasLayer<><>0<>0<><>::
-::res://Scripts/Blackjack/::1779206161
-Blackjack.gd::GDScript::7267462990471109999::1779206161::0::1::::<>Control<><>0<>0<><>::
+::res://Scripts/Blackjack/::1779206278
+Blackjack.gd::GDScript::7267462990471109999::1779206278::0::1::::<>Control<><>0<>0<><>::
 Card.gd::GDScript::7790398624107748257::1779203998::0::1::::<>PanelContainer<><>0<>0<><>::
 ::res://Scripts/GameOver/::1779203629
 GameOver.gd::GDScript::2233559692696959540::1779203420::0::1::::<>Control<><>0<>0<><>::
